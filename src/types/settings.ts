@@ -9,7 +9,7 @@ export interface AppSettings {
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {
-  category: "competitive_programming",
+  category: "cpp",
   difficulty: "level_2",
   drillMode: "algorithm",
   gameMode: "timed",

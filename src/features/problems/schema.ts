@@ -3,20 +3,15 @@ import type {
   Difficulty,
   DrillMode,
   ProblemItem,
-  ProblemsByDifficulty,
+  ProblemsByMode,
   ProblemsJson,
 } from "@/types/problem";
 
-export const CATEGORIES: Category[] = [
-  "cpp",
-  "python",
-  "rust",
-  "competitive_programming",
-];
+export const CATEGORIES: Category[] = ["cpp", "python", "rust"];
 
 export const DIFFICULTIES: Difficulty[] = ["level_1", "level_2", "level_3"];
 
-export const DRILL_MODES: DrillMode[] = ["syntax", "algorithm"];
+export const DRILL_MODES: DrillMode[] = ["random_syntax", "algorithm"];
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -44,19 +39,29 @@ function parseProblemItem(value: unknown, path: string): ProblemItem {
     throw new Error(`${path}.code: code must be a non-empty string`);
   }
 
-  if (mode !== "syntax" && mode !== "algorithm") {
-    throw new Error(`${path}.mode: mode must be syntax or algorithm`);
+  if (mode !== "random_syntax" && mode !== "algorithm") {
+    throw new Error(`${path}.mode: mode must be random_syntax or algorithm`);
   }
 
   return { id, title, code, mode };
 }
 
-function parseDifficultyBucket(value: unknown, path: string): ProblemItem[] {
+function parseModeBucket(value: unknown, mode: DrillMode, path: string): ProblemItem[] {
   if (!Array.isArray(value)) {
     return [];
   }
 
-  return value.map((item, index) => parseProblemItem(item, `${path}[${index}]`));
+  return value.map((item, index) => {
+    const parsed = parseProblemItem(item, `${path}[${index}]`);
+
+    if (parsed.mode !== mode) {
+      throw new Error(
+        `${path}[${index}].mode: expected ${mode}, received ${parsed.mode}`,
+      );
+    }
+
+    return parsed;
+  });
 }
 
 export function parseProblemsData(raw: unknown): ProblemsJson {
@@ -69,12 +74,13 @@ export function parseProblemsData(raw: unknown): ProblemsJson {
   for (const category of CATEGORIES) {
     const categoryValue = raw[category];
     const categoryRecord = isRecord(categoryValue) ? categoryValue : {};
-    const parsedCategory = {} as ProblemsByDifficulty;
+    const parsedCategory = {} as ProblemsByMode;
 
-    for (const difficulty of DIFFICULTIES) {
-      parsedCategory[difficulty] = parseDifficultyBucket(
-        categoryRecord[difficulty],
-        `${category}.${difficulty}`,
+    for (const mode of DRILL_MODES) {
+      parsedCategory[mode] = parseModeBucket(
+        categoryRecord[mode],
+        mode,
+        `${category}.${mode}`,
       );
     }
 

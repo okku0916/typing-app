@@ -1,17 +1,31 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { ResultPanel } from "@/components/game/ResultPanel";
 import { useLocalStorageState } from "@/hooks/useLocalStorage";
 import { STORAGE_KEYS } from "@/lib/constants";
+import { toSearchParams } from "@/lib/sessionConfig";
+import { DEFAULT_SETTINGS } from "@/types/settings";
+import type { AppSettings } from "@/types/settings";
 import type { SessionResult } from "@/types/session";
 
 export default function ResultPage() {
+  const router = useRouter();
   const [latestResult] = useLocalStorageState<SessionResult | null>(
     STORAGE_KEYS.latestResult,
     null,
   );
+  const [settings] = useLocalStorageState<AppSettings>(STORAGE_KEYS.settings, DEFAULT_SETTINGS);
+
+  const handleQuickPlay = () => {
+    const params = toSearchParams(settings);
+    const cursor = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
+
+    params.set("cursor", String(cursor));
+    router.push(`/play?${params.toString()}`);
+  };
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-4xl flex-col gap-5 px-4 py-8 sm:px-6">
@@ -35,12 +49,13 @@ export default function ResultPage() {
         >
           ホームへ戻る
         </Link>
-        <Link
-          href="/play"
+        <button
+          type="button"
+          onClick={handleQuickPlay}
           className="rounded-md border border-accent bg-accent px-4 py-2 text-sm font-medium text-[#0b1320] transition hover:bg-accent/90"
         >
           すぐにプレイ
-        </Link>
+        </button>
       </div>
     </main>
   );

@@ -1,14 +1,24 @@
 import { problemsData } from "@/features/problems/loader";
-import type { Category, Difficulty, DrillMode, SelectedProblem } from "@/types/problem";
-
-function randomPick<T>(values: T[]): T {
-  const index = Math.floor(Math.random() * values.length);
-  return values[index];
-}
+import type { Category, Difficulty, DrillMode, ProblemItem, SelectedProblem } from "@/types/problem";
 
 function pickByIndex<T>(values: T[], cursor: number): T {
   const safeCursor = Math.abs(cursor) % values.length;
   return values[safeCursor];
+}
+
+function applyDifficultyFilter(pool: ProblemItem[], difficulty: Difficulty): ProblemItem[] {
+  if (difficulty === "level_1") {
+    return pool.filter((problem) => problem.code.split("\n").length <= 4);
+  }
+
+  if (difficulty === "level_2") {
+    return pool.filter((problem) => {
+      const lines = problem.code.split("\n").length;
+      return lines >= 3 && lines <= 12;
+    });
+  }
+
+  return pool;
 }
 
 export function getProblemPool(params: {
@@ -17,41 +27,14 @@ export function getProblemPool(params: {
   drillMode: DrillMode;
 }) {
   const { category, difficulty, drillMode } = params;
+  const modePool = problemsData[category][drillMode];
+  const filtered = applyDifficultyFilter(modePool, difficulty);
 
-  return problemsData[category][difficulty].filter(
-    (problem) => problem.mode === drillMode,
-  );
-}
-
-export function selectRandomProblem(params: {
-  category: Category;
-  difficulty: Difficulty;
-  drillMode: DrillMode;
-}): SelectedProblem {
-  const { category, difficulty, drillMode } = params;
-  const pool = getProblemPool({ category, difficulty, drillMode });
-
-  if (pool.length === 0) {
-    const fallback = problemsData[category][difficulty];
-    if (fallback.length === 0) {
-      throw new Error(`No problems found for ${category}/${difficulty}`);
-    }
-
-    const fallbackProblem = randomPick(fallback);
-    return {
-      ...fallbackProblem,
-      category,
-      difficulty,
-    };
+  if (filtered.length > 0) {
+    return filtered;
   }
 
-  const selected = randomPick(pool);
-
-  return {
-    ...selected,
-    category,
-    difficulty,
-  };
+  return modePool;
 }
 
 export function selectProblemByCursor(params: {
@@ -64,17 +47,7 @@ export function selectProblemByCursor(params: {
   const pool = getProblemPool({ category, difficulty, drillMode });
 
   if (pool.length === 0) {
-    const fallback = problemsData[category][difficulty];
-    if (fallback.length === 0) {
-      throw new Error(`No problems found for ${category}/${difficulty}`);
-    }
-
-    const fallbackProblem = pickByIndex(fallback, cursor);
-    return {
-      ...fallbackProblem,
-      category,
-      difficulty,
-    };
+    throw new Error(`No problems found for ${category}/${drillMode}`);
   }
 
   const selected = pickByIndex(pool, cursor);
@@ -82,6 +55,5 @@ export function selectProblemByCursor(params: {
   return {
     ...selected,
     category,
-    difficulty,
   };
 }

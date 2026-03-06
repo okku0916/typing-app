@@ -1,8 +1,8 @@
-export type Category = "cpp" | "python" | "rust" | "competitive_programming";
+export type Category = "cpp" | "python" | "rust";
 
 export type Difficulty = "level_1" | "level_2" | "level_3";
 
-export type DrillMode = "syntax" | "algorithm";
+export type DrillMode = "random_syntax" | "algorithm";
 
 export interface ProblemItem {
   id: string;
@@ -11,11 +11,10 @@ export interface ProblemItem {
   mode: DrillMode;
 }
 
-export type ProblemsByDifficulty = Record<Difficulty, ProblemItem[]>;
+export type ProblemsByMode = Record<DrillMode, ProblemItem[]>;
 
-export type ProblemsJson = Record<Category, ProblemsByDifficulty>;
+export type ProblemsJson = Record<Category, ProblemsByMode>;
 
 export interface SelectedProblem extends ProblemItem {
   category: Category;
-  difficulty: Difficulty;
 }

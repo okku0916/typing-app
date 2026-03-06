@@ -5,14 +5,12 @@ export const CATEGORY_LABELS: Record<Category, string> = {
   cpp: "C++",
   python: "Python",
   rust: "Rust",
-  competitive_programming: "競技プログラミング",
 };
 
 export const CATEGORY_DESCRIPTIONS: Record<Category, string> = {
   cpp: "STLやテンプレートを使った実戦的な記法",
   python: "読みやすい構文とアルゴリズムの定番パターン",
   rust: "所有権を意識した構文と実装テンプレート",
-  competitive_programming: "コンテスト想定の言語横断ドリル",
 };
 
 export const DIFFICULTY_LABELS: Record<Difficulty, string> = {
@@ -28,12 +26,12 @@ export const DIFFICULTY_DESCRIPTIONS: Record<Difficulty, string> = {
 };
 
 export const DRILL_MODE_LABELS: Record<DrillMode, string> = {
-  syntax: "ランダム構文",
+  random_syntax: "ランダム構文",
   algorithm: "アルゴリズム",
 };
 
 export const DRILL_MODE_DESCRIPTIONS: Record<DrillMode, string> = {
-  syntax: "短い構文・スニペットをランダム出題",
+  random_syntax: "短い構文・スニペットをランダム出題",
   algorithm: "複数行コードを連続入力",
 };
 
