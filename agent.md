@@ -1,78 +1,78 @@
 # Agent Guide - CodeTyping
 
-## Project Goal
-- Build a programming-focused typing trainer for developers and competitive programmers.
-- Keep the initial release backend-free:
-  - Problem source: `src/data/problems.json`
-  - Persistence: `localStorage`
+## プロジェクト目的
+- プログラマーおよび競技プログラマー向けのコード入力特化タイピング練習アプリを構築する。
+- 初期リリースはバックエンドなしで完結させる。
+  - 問題データ: `src/data/problems.json`
+  - 保存先: `localStorage`
 
-## Tech Stack
+## 技術スタック
 - Next.js (App Router)
 - React + TypeScript
 - Tailwind CSS
-- State management with React Hooks (Context only if shared state expands)
+- 状態管理は React Hooks を基本とし、必要時のみ Context を追加
 
-## Core Product Rules
-- Case-sensitive matching (strict on upper/lower case).
-- Non-blocking typing flow:
-  - Input is never blocked on mistakes.
-  - Mistyped characters are highlighted in red.
-  - Mistakes reduce final score.
-- Multi-line editor-like behavior:
-  - When expected char is newline and user presses Enter, auto-skip indentation on next line.
-- Results must show:
-  - Score (`correctChars - penalty`)
-  - WPM (`(correctChars / 5) / minutes`)
-  - Weak keys top 3
+## コア要件
+- 大文字・小文字は厳密判定。
+- 入力はミスしても止めない。
+  - ミス文字は赤ハイライト。
+  - ミス数をスコア減点に反映。
+- 複数行コードの Enter 入力時、次行インデントを自動スキップする。
+- リザルト画面に以下を表示する。
+  - スコア（`correctChars - penalty`）
+  - WPM（`(correctChars / 5) / minutes`）
+  - 苦手キー Top 3
+  - 完了問題数
 
-## Data Contract
+## データ契約
 - `src/data/problems.json`
-  - Categories: `cpp`, `python`, `rust`, `competitive_programming`
-  - Difficulties: `level_1`, `level_2`, `level_3`
-  - Problem item:
+  - カテゴリ: `cpp`, `python`, `rust`, `competitive_programming`
+  - 難易度: `level_1`, `level_2`, `level_3`
+  - 問題項目:
     - `id: string`
     - `title: string`
     - `mode: "syntax" | "algorithm"`
     - `code: string`
 
-## Architecture
+## アーキテクチャ
 - `src/features/problems/*`
-  - Schema parsing/validation and random selection
+  - スキーマ検証と問題選択ロジック
 - `src/features/typing/*`
-  - Pure typing engine logic
-  - Scoring/WPM/weak-key calculation
-  - Indentation jump helper
+  - 純関数ベースのタイピング判定エンジン
+  - スコア/WPM/苦手キー集計
+  - インデントスキップ補助
 - `src/hooks/*`
-  - Session orchestration (`useTypingSession`)
-  - Timer (`useTimer`)
-  - localStorage state helper (`useLocalStorageState`)
+  - セッション制御（`useTypingSession`）
+  - タイマー（`useTimer`）
+  - localStorage連携（`useLocalStorageState`）
 - `src/components/*`
-  - UI-only components (selectors, code view, result panel)
+  - 表示中心のUI部品（各種セレクタ、コード表示、リザルト）
 
-## UI Direction
-- Initial UI: VS Code Dark+ inspired editor style.
-- Keep theme tokens in CSS variables so future themes can be added without rewriting components.
+## UI方針
+- 初期は VS Code Dark+ 風のエディタUI。
+- 将来テーマ切替に備え、色は CSS 変数トークンで定義する。
 
-## Default Gameplay Constants
-- Time limits:
-  - `level_1`: 60s
-  - `level_2`: 120s
-  - `level_3`: 180s
-  - unlimited mode: no limit
-- Penalty: `-1` per mistake
+## デフォルト定数
+- 制限時間:
+  - `level_1`: 60秒
+  - `level_2`: 120秒
+  - `level_3`: 180秒
+  - 無制限モード: 上限なし
+- ペナルティ: 1ミスごとに `-1`
 
-## Build Phases
-1. Setup and base UI shell
-2. Problem data and selector layer
-3. Typing engine and input judgment
-4. Timer/game-mode integration and indent-jump UX
-5. Result metrics and rendering
-6. localStorage persistence for settings/result
-7. Validation, lint/build checks, and polish
+## 実装フェーズ
+1. 環境構築とUI骨組み
+2. 問題データ層と選択ロジック
+3. タイピング判定エンジン
+4. タイマー/モード制御とインデントUX
+5. リザルト指標と表示
+6. localStorage永続化
+7. lint/build検証と仕上げ
 
-## Definition of Done (MVP)
-- Home screen supports selecting category, drill mode, difficulty, and game mode.
-- Play screen supports real-time typing, mistake highlighting, progress, and timer.
-- Enter triggers auto-indent jump for multi-line code.
-- Result screen shows score, WPM, and weak keys top 3.
-- Latest result and settings persist across reloads.
+## MVPの完了条件
+- ホーム画面でカテゴリ/出題モード/難易度/ゲームモードを選択できる。
+- プレイ画面でリアルタイム判定、ミス表示、進捗、タイマーが動作する。
+- Enterでインデントスキップが機能する。
+- 通常モードで時間内に問題完了時、次の問題が自動出題される。
+- リザルト画面でスコア/WPM/苦手キー/完了問題数を表示する。
+- 設定と最新リザルトがリロード後も復元される。

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { selectRandomProblem } from "@/features/problems/selector";
+import { selectProblemByCursor } from "@/features/problems/selector";
 import {
   applyKeyInput,
   createInitialState,
@@ -12,49 +12,103 @@ import {
 import { useTimer } from "@/hooks/useTimer";
 import { STORAGE_KEYS, TIME_LIMITS } from "@/lib/constants";
 import { writeStorage } from "@/lib/storage";
+import type { SelectedProblem } from "@/types/problem";
 import type { AppSettings } from "@/types/settings";
 import type { SessionResult } from "@/types/session";
 
 export type SessionStatus = "ready" | "running" | "finished";
 
+interface AggregateStats {
+  correctChars: number;
+  mistakeCount: number;
+  mistakeMap: TypingEngineState["mistakeMap"];
+  completedProblems: number;
+}
+
+interface SessionState {
+  status: SessionStatus;
+  problem: SelectedProblem;
+  engineState: TypingEngineState;
+  result: SessionResult | null;
+  cursor: number;
+  aggregate: AggregateStats;
+}
+
 export interface TypingSession {
   status: SessionStatus;
-  problem: ReturnType<typeof selectRandomProblem>;
+  problem: SelectedProblem;
   engineState: TypingEngineState;
   result: SessionResult | null;
   elapsedSeconds: number;
   remainingSeconds: number | null;
   totalSeconds: number | null;
+  completedProblems: number;
   inputKey: (key: string) => void;
   restart: () => void;
 }
 
-interface SessionState {
-  status: SessionStatus;
-  problem: ReturnType<typeof selectRandomProblem>;
-  engineState: TypingEngineState;
-  result: SessionResult | null;
-}
-
-function createFreshSession(config: AppSettings): SessionState {
-  const problem = selectRandomProblem(config);
-  const engineState = createInitialState(problem.code);
-
+function emptyAggregate(): AggregateStats {
   return {
-    status: "ready",
-    problem,
-    engineState,
-    result: null,
+    correctChars: 0,
+    mistakeCount: 0,
+    mistakeMap: {},
+    completedProblems: 0,
   };
 }
 
-export function useTypingSession(config: AppSettings): TypingSession {
+function mergeMistakeMap(
+  base: TypingEngineState["mistakeMap"],
+  addition: TypingEngineState["mistakeMap"],
+) {
+  const merged = { ...base };
+
+  Object.entries(addition).forEach(([key, count]) => {
+    merged[key] = (merged[key] ?? 0) + count;
+  });
+
+  return merged;
+}
+
+function createStateByCursor(
+  config: AppSettings,
+  cursor: number,
+  aggregate: AggregateStats,
+  status: SessionStatus,
+): SessionState {
+  const problem = selectProblemByCursor({
+    category: config.category,
+    difficulty: config.difficulty,
+    drillMode: config.drillMode,
+    cursor,
+  });
+
+  return {
+    status,
+    problem,
+    engineState: createInitialState(problem.code),
+    result: null,
+    cursor,
+    aggregate,
+  };
+}
+
+function normalizeInitialCursor(initialCursor: number) {
+  if (!Number.isFinite(initialCursor)) {
+    return 0;
+  }
+
+  return Math.max(0, Math.floor(initialCursor));
+}
+
+export function useTypingSession(
+  config: AppSettings,
+  initialCursor: number,
+): TypingSession {
   const [sessionState, setSessionState] = useState<SessionState>(() =>
-    createFreshSession(config),
+    createStateByCursor(config, normalizeInitialCursor(initialCursor), emptyAggregate(), "ready"),
   );
 
   const elapsedRef = useRef(0);
-
   const totalSeconds =
     config.gameMode === "timed" ? TIME_LIMITS[config.difficulty] : null;
 
@@ -63,27 +117,56 @@ export function useTypingSession(config: AppSettings): TypingSession {
       baseState: SessionState,
       finalEngineState: TypingEngineState,
       elapsedSeconds: number,
+      problemSolved: boolean,
     ): SessionState => {
       if (baseState.status === "finished") {
         return baseState;
       }
 
-      const stats = summarizeTyping(finalEngineState, elapsedSeconds);
+      const nextAggregate: AggregateStats = {
+        correctChars: baseState.aggregate.correctChars + finalEngineState.correctChars,
+        mistakeCount: baseState.aggregate.mistakeCount + finalEngineState.mistakeCount,
+        mistakeMap: mergeMistakeMap(baseState.aggregate.mistakeMap, finalEngineState.mistakeMap),
+        completedProblems:
+          baseState.aggregate.completedProblems + (problemSolved ? 1 : 0),
+      };
+
+      const canContinueTimed =
+        config.gameMode === "timed" &&
+        totalSeconds !== null &&
+        problemSolved &&
+        elapsedSeconds < totalSeconds;
+
+      if (canContinueTimed) {
+        return createStateByCursor(config, baseState.cursor + 1, nextAggregate, "running");
+      }
+
+      const aggregatedState: TypingEngineState = {
+        ...finalEngineState,
+        correctChars: nextAggregate.correctChars,
+        mistakeCount: nextAggregate.mistakeCount,
+        mistakeMap: nextAggregate.mistakeMap,
+      };
+
+      const stats = summarizeTyping(aggregatedState, elapsedSeconds);
       const result: SessionResult = {
         config,
         problem: baseState.problem,
-        stats,
+        stats: {
+          ...stats,
+          completedProblems: nextAggregate.completedProblems,
+        },
         completedAt: new Date().toISOString(),
       };
 
       return {
         ...baseState,
         status: "finished",
-        engineState: finalEngineState,
         result,
+        aggregate: nextAggregate,
       };
     },
-    [config],
+    [config, totalSeconds],
   );
 
   const { elapsedSeconds, remainingSeconds, reset } = useTimer({
@@ -92,9 +175,17 @@ export function useTypingSession(config: AppSettings): TypingSession {
     totalSeconds,
     onExpire: () => {
       setSessionState((previous) => {
-        const resolvedElapsed = totalSeconds ?? elapsedRef.current;
+        if (previous.status === "finished") {
+          return previous;
+        }
 
-        return finalizeSession(previous, previous.engineState, resolvedElapsed);
+        const resolvedElapsed = totalSeconds ?? elapsedRef.current;
+        return finalizeSession(
+          previous,
+          previous.engineState,
+          resolvedElapsed,
+          previous.engineState.isCompleted,
+        );
       });
     },
   });
@@ -109,34 +200,43 @@ export function useTypingSession(config: AppSettings): TypingSession {
     }
   }, [sessionState.result]);
 
-  const inputKey = useCallback((key: string) => {
-    setSessionState((previous) => {
-      if (previous.status === "finished") {
-        return previous;
-      }
+  const inputKey = useCallback(
+    (key: string) => {
+      setSessionState((previous) => {
+        if (previous.status === "finished") {
+          return previous;
+        }
 
-      const nextEngineState = applyKeyInput(previous.engineState, key);
-      const nextStatus: SessionStatus =
-        previous.status === "ready" ? "running" : previous.status;
+        const normalizedKey = key === "Backspace" ? "__BACKSPACE__" : key;
+        const nextEngineState = applyKeyInput(previous.engineState, normalizedKey);
 
-      const nextState: SessionState = {
-        ...previous,
-        status: nextStatus,
-        engineState: nextEngineState,
-      };
+        const nextStatus: SessionStatus =
+          previous.status === "ready" && normalizedKey !== "__BACKSPACE__"
+            ? "running"
+            : previous.status;
 
-      if (!nextEngineState.isCompleted) {
-        return nextState;
-      }
+        const nextState: SessionState = {
+          ...previous,
+          status: nextStatus,
+          engineState: nextEngineState,
+        };
 
-      return finalizeSession(nextState, nextEngineState, elapsedRef.current);
-    });
-  }, [finalizeSession]);
+        if (!nextEngineState.isCompleted) {
+          return nextState;
+        }
+
+        return finalizeSession(nextState, nextEngineState, elapsedRef.current, true);
+      });
+    },
+    [finalizeSession],
+  );
 
   const restart = useCallback(() => {
     elapsedRef.current = 0;
     reset();
-    setSessionState(createFreshSession(config));
+    setSessionState((previous) =>
+      createStateByCursor(config, previous.cursor + 1, emptyAggregate(), "ready"),
+    );
   }, [config, reset]);
 
   return {
@@ -147,6 +247,7 @@ export function useTypingSession(config: AppSettings): TypingSession {
     elapsedSeconds,
     remainingSeconds,
     totalSeconds,
+    completedProblems: sessionState.aggregate.completedProblems,
     inputKey,
     restart,
   };

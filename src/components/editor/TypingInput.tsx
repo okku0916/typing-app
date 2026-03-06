@@ -17,7 +17,7 @@ export function TypingInput({ onInputKey, disabled }: TypingInputProps) {
   return (
     <div className="space-y-2">
       <p className="text-xs text-muted">
-        Focus is captured here. Press Enter to move lines with auto-indent jump.
+        ここで入力を受け取ります。Enterで改行し、次行のインデントは自動スキップします。
       </p>
       <input
         ref={inputRef}
@@ -34,6 +34,12 @@ export function TypingInput({ onInputKey, disabled }: TypingInputProps) {
           }
 
           event.preventDefault();
+
+          if (event.key === "Backspace") {
+            onInputKey("Backspace");
+            return;
+          }
+
           const key = event.key === "Enter" ? "\n" : event.key;
 
           if (key.length === 1 || key === "\n" || key === "Tab") {

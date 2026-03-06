@@ -10,6 +10,7 @@ export interface SessionConfig {
 }
 
 export interface SessionStats {
+  completedProblems: number;
   correctChars: number;
   mistakeCount: number;
   penalty: number;

@@ -19,11 +19,11 @@ export function TimerDisplay({ elapsedSeconds, remainingSeconds, totalSeconds }:
   return (
     <div className="grid gap-2 rounded-lg border border-panel-border/70 bg-background/40 p-3 text-sm sm:grid-cols-2">
       <div>
-        <p className="text-xs text-muted">Elapsed</p>
+        <p className="text-xs text-muted">経過時間</p>
         <p className="code-font text-lg text-foreground">{toClock(elapsedSeconds)}</p>
       </div>
       <div>
-        <p className="text-xs text-muted">Remaining</p>
+        <p className="text-xs text-muted">残り時間</p>
         <p className="code-font text-lg text-foreground">
           {totalSeconds === null || remainingSeconds === null
             ? "∞"

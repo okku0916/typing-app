@@ -1,7 +1,12 @@
 import { getIndentJump } from "@/features/typing/indent";
 import { calculatePenalty, calculateScore } from "@/features/typing/score";
 import { calculateWpm } from "@/features/typing/wpm";
-import { incrementMistake, toWeakKeysTop3, type MistakeMap } from "@/features/typing/weakKeys";
+import {
+  incrementMistake,
+  subtractMistakeMaps,
+  toWeakKeysTop3,
+  type MistakeMap,
+} from "@/features/typing/weakKeys";
 
 export interface CharacterState {
   expected: string;
@@ -17,7 +22,15 @@ export interface TypingEngineState {
   mistakeCount: number;
   mistakeMap: MistakeMap;
   visual: CharacterState[];
+  history: StepHistory[];
   isCompleted: boolean;
+}
+
+interface StepHistory {
+  consumed: number;
+  correctDelta: number;
+  mistakeDelta: number;
+  mistakeMapDelta: MistakeMap;
 }
 
 export interface TypingSummary {
@@ -43,6 +56,7 @@ export function createInitialState(reference: string): TypingEngineState {
       isCorrect: false,
       isMistake: false,
     })),
+    history: [],
     isCompleted: reference.length === 0,
   };
 }
@@ -65,17 +79,74 @@ function applyCharacter(
 
   const nextCursor = state.cursorIndex + step;
 
+  const stepHistory: StepHistory = {
+    consumed: step,
+    correctDelta: isMistake ? 0 : 1,
+    mistakeDelta: isMistake ? 1 : 0,
+    mistakeMapDelta: isMistake ? incrementMistake({}, char) : {},
+  };
+
+  const nextHistory = [...state.history, stepHistory];
+  const nextMistakeMap = isMistake
+    ? incrementMistake(state.mistakeMap, char)
+    : state.mistakeMap;
+
   return {
     ...state,
     cursorIndex: nextCursor,
-    correctChars: state.correctChars + (isMistake ? 0 : 1),
-    mistakeCount: state.mistakeCount + (isMistake ? 1 : 0),
+    correctChars: state.correctChars + stepHistory.correctDelta,
+    mistakeCount: state.mistakeCount + stepHistory.mistakeDelta,
+    mistakeMap: nextMistakeMap,
     visual: updatedVisual,
+    history: nextHistory,
     isCompleted: nextCursor >= state.reference.length,
   };
 }
 
+export function applyBackspace(state: TypingEngineState): TypingEngineState {
+  if (state.history.length === 0 || state.cursorIndex === 0) {
+    return state;
+  }
+
+  const history = [...state.history];
+  const lastStep = history.pop();
+
+  if (!lastStep) {
+    return state;
+  }
+
+  const nextCursor = Math.max(state.cursorIndex - lastStep.consumed, 0);
+  const updatedVisual = [...state.visual];
+
+  for (let i = nextCursor; i < state.cursorIndex; i += 1) {
+    updatedVisual[i] = {
+      ...updatedVisual[i],
+      entered: null,
+      isCorrect: false,
+      isMistake: false,
+    };
+  }
+
+  return {
+    ...state,
+    cursorIndex: nextCursor,
+    correctChars: Math.max(state.correctChars - lastStep.correctDelta, 0),
+    mistakeCount: Math.max(state.mistakeCount - lastStep.mistakeDelta, 0),
+    mistakeMap: subtractMistakeMaps(state.mistakeMap, lastStep.mistakeMapDelta),
+    visual: updatedVisual,
+    history,
+    isCompleted: false,
+  };
+}
+
 export function applyKeyInput(state: TypingEngineState, key: string): TypingEngineState {
+  if (key === "__BACKSPACE__") {
+    return applyBackspace({
+      ...state,
+      isCompleted: false,
+    });
+  }
+
   if (state.isCompleted || key.length === 0) {
     return state;
   }
@@ -97,22 +168,15 @@ export function applyKeyInput(state: TypingEngineState, key: string): TypingEngi
     }
 
     enteredState.correctChars += jump;
+    enteredState.history[enteredState.history.length - 1].correctDelta += jump;
+
     return {
       ...enteredState,
       isCompleted: enteredState.cursorIndex >= state.reference.length,
     };
   }
 
-  const nextState = applyCharacter(state, key, 1, isMistake);
-
-  if (!isMistake) {
-    return nextState;
-  }
-
-  return {
-    ...nextState,
-    mistakeMap: incrementMistake(nextState.mistakeMap, key),
-  };
+  return applyCharacter(state, key, 1, isMistake);
 }
 
 export function summarizeTyping(state: TypingEngineState, elapsedSeconds: number): TypingSummary {

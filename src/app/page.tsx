@@ -29,37 +29,37 @@ export default function Home() {
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-6 px-4 py-8 sm:px-6">
       <header className="rounded-2xl border border-panel-border/70 bg-panel/85 p-6">
-        <p className="text-xs uppercase tracking-[0.24em] text-accent">Programming Typing App</p>
+        <p className="text-xs uppercase tracking-[0.24em] text-accent">プログラミング特化タイピング</p>
         <h1 className="mt-2 text-3xl font-semibold text-foreground sm:text-4xl">CodeTyping</h1>
         <p className="mt-3 max-w-3xl text-sm leading-6 text-muted sm:text-base">
-          Strict case-sensitive code typing trainer for programmers and competitive coders.
-          Enter on multi-line code auto-jumps indentation like an editor.
+          プログラマーと競技プログラマー向けの、コード入力に特化したタイピング練習アプリです。
+          複数行コードでは Enter で次行インデントまで自動でカーソルが進みます。
         </p>
       </header>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <SelectorSection title="Category" subtitle="Select language or contest-focus set">
+        <SelectorSection title="カテゴリ" subtitle="言語または競技向けセットを選択">
           <CategorySelector
             value={settings.category}
             onChange={(category) => setSettings((prev) => ({ ...prev, category }))}
           />
         </SelectorSection>
 
-        <SelectorSection title="Drill Mode" subtitle="Short snippets or algorithm blocks">
+        <SelectorSection title="出題モード" subtitle="短文スニペットかアルゴリズム連続入力を選択">
           <ModeSelector
             value={settings.drillMode}
             onChange={(drillMode) => setSettings((prev) => ({ ...prev, drillMode }))}
           />
         </SelectorSection>
 
-        <SelectorSection title="Difficulty" subtitle="Controls problem complexity and timer">
+        <SelectorSection title="難易度" subtitle="出題内容と制限時間を調整">
           <DifficultySelector
             value={settings.difficulty}
             onChange={(difficulty) => setSettings((prev) => ({ ...prev, difficulty }))}
           />
         </SelectorSection>
 
-        <SelectorSection title="Game Mode" subtitle="Time attack or unlimited practice">
+        <SelectorSection title="ゲームモード" subtitle="時間制限あり / なしを切り替え">
           <GameModeSelector
             value={settings.gameMode}
             onChange={(gameMode) => setSettings((prev) => ({ ...prev, gameMode }))}
@@ -70,11 +70,11 @@ export default function Home() {
       <section className="rounded-xl border border-panel-border/70 bg-panel/80 p-5">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <p className="text-xs text-muted">Current Timer</p>
+            <p className="text-xs text-muted">現在の制限時間</p>
             <p className="code-font text-xl text-foreground">
               {settings.gameMode === "unlimited"
-                ? "Unlimited"
-                : `${TIME_LIMITS[settings.difficulty]} sec (${DIFFICULTY_LABELS[settings.difficulty]})`}
+                ? "無制限"
+                : `${TIME_LIMITS[settings.difficulty]} 秒（${DIFFICULTY_LABELS[settings.difficulty]}）`}
             </p>
           </div>
 
@@ -83,23 +83,23 @@ export default function Home() {
               href={playHref}
               className="rounded-md border border-accent bg-accent px-5 py-2 text-sm font-semibold text-[#0a1220] transition hover:bg-accent/90"
             >
-              Start Session
+              セッション開始
             </Link>
             <Link
               href="/result"
               className="rounded-md border border-panel-border px-5 py-2 text-sm font-semibold text-foreground transition hover:border-accent"
             >
-              Latest Result
+              最新リザルト
             </Link>
           </div>
         </div>
 
         {latestResult ? (
           <div className="mt-4 rounded-lg border border-panel-border bg-background/35 p-3">
-            <p className="text-xs text-muted">Last Session Snapshot</p>
+            <p className="text-xs text-muted">前回セッションの概要</p>
             <p className="mt-2 text-sm text-foreground">
-              Score {latestResult.stats.score} / WPM {latestResult.stats.wpm} / Mistakes{" "}
-              {latestResult.stats.mistakeCount}
+              スコア {latestResult.stats.score} / WPM {latestResult.stats.wpm} / ミス数{" "}
+              {latestResult.stats.mistakeCount} / 完了問題数 {latestResult.stats.completedProblems}
             </p>
           </div>
         ) : null}

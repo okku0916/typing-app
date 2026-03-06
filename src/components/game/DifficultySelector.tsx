@@ -31,7 +31,7 @@ export function DifficultySelector({ value, onChange }: DifficultySelectorProps)
               {DIFFICULTY_LABELS[difficulty]}
             </p>
             <p className="mt-1 text-xs text-muted">{DIFFICULTY_DESCRIPTIONS[difficulty]}</p>
-            <p className="mt-2 text-xs text-warning">{TIME_LIMITS[difficulty]} sec</p>
+            <p className="mt-2 text-xs text-warning">{TIME_LIMITS[difficulty]} 秒</p>
           </button>
         );
       })}

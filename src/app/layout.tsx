@@ -13,8 +13,8 @@ const codeFont = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "CodeTyping",
-  description: "Programming-focused typing trainer for developers",
+  title: "CodeTyping | プログラミング特化型タイピング練習",
+  description: "プログラマー向けのコード入力特化タイピング練習アプリ",
 };
 
 export default function RootLayout({
