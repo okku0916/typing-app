@@ -1,153 +1,139 @@
 {
   "cpp": {
-    "level_1": [
+    "random_syntax": [
       {
-        "id": "cpp-l1-include",
-        "title": "Include iostream",
-        "mode": "syntax",
-        "code": "#include <iostream>"
+        "id": "cpp-syntax-include",
+        "title": "iostreamのインクルード",
+        "code": "#include <iostream>",
+        "mode": "random_syntax"
       },
       {
-        "id": "cpp-l1-using",
-        "title": "Using namespace",
-        "mode": "syntax",
-        "code": "using namespace std;"
-      }
-    ],
-    "level_2": [
-      {
-        "id": "cpp-l2-for",
-        "title": "for loop",
-        "mode": "syntax",
-        "code": "for (int i = 0; i < n; i++) {\n    cout << i << '\\n';\n}"
+        "id": "cpp-syntax-using",
+        "title": "名前空間の宣言",
+        "code": "using namespace std;",
+        "mode": "random_syntax"
       },
       {
-        "id": "cpp-l2-function",
-        "title": "Function definition",
-        "mode": "syntax",
-        "code": "int add(int a, int b) {\n    return a + b;\n}"
+        "id": "cpp-syntax-fast-io",
+        "title": "高速入出力",
+        "code": "ios::sync_with_stdio(false);\ncin.tie(nullptr);",
+        "mode": "random_syntax"
+      },
+      {
+        "id": "cpp-syntax-for",
+        "title": "for文",
+        "code": "for (int i = 0; i < n; i++) {\n    cout << i << '\\n';\n}",
+        "mode": "random_syntax"
+      },
+      {
+        "id": "cpp-syntax-function",
+        "title": "関数定義",
+        "code": "int add(int a, int b) {\n    return a + b;\n}",
+        "mode": "random_syntax"
       }
     ],
-    "level_3": [
+    "algorithm": [
       {
-        "id": "cpp-l3-binary-search",
-        "title": "Binary Search",
-        "mode": "algorithm",
-        "code": "int binary_search(const vector<int>& a, int x) {\n    int l = 0, r = (int)a.size() - 1;\n    while (l <= r) {\n        int m = l + (r - l) / 2;\n        if (a[m] == x) return m;\n        if (a[m] < x) l = m + 1;\n        else r = m - 1;\n    }\n    return -1;\n}"
+        "id": "cpp-algo-binary-search",
+        "title": "二分探索",
+        "code": "int binary_search(const vector<int>& a, int x) {\n    int l = 0, r = (int)a.size() - 1;\n    while (l <= r) {\n        int m = l + (r - l) / 2;\n        if (a[m] == x) return m;\n        if (a[m] < x) l = m + 1;\n        else r = m - 1;\n    }\n    return -1;\n}",
+        "mode": "algorithm"
+      },
+      {
+        "id": "cpp-algo-prefix-sum",
+        "title": "累積和",
+        "code": "vector<long long> pref(n + 1, 0);\nfor (int i = 0; i < n; i++) {\n    pref[i + 1] = pref[i] + a[i];\n}",
+        "mode": "algorithm"
+      },
+      {
+        "id": "cpp-algo-sieve",
+        "title": "エラトステネスの篩",
+        "code": "vector<bool> is_prime(N + 1, true);\nis_prime[0] = is_prime[1] = false;\nfor (int p = 2; p * p <= N; p++) {\n    if (is_prime[p]) {\n        for (int i = p * p; i <= N; i += p)\n            is_prime[i] = false;\n    }\n}",
+        "mode": "algorithm"
       }
     ]
   },
   "python": {
-    "level_1": [
+    "random_syntax": [
       {
-        "id": "python-l1-import",
-        "title": "Import sys",
-        "mode": "syntax",
-        "code": "import sys"
+        "id": "python-syntax-import-sys",
+        "title": "sysのインポート",
+        "code": "import sys",
+        "mode": "random_syntax"
       },
       {
-        "id": "python-l1-list",
-        "title": "List literal",
-        "mode": "syntax",
-        "code": "numbers = [1, 2, 3, 4]"
-      }
-    ],
-    "level_2": [
-      {
-        "id": "python-l2-if",
-        "title": "if statement",
-        "mode": "syntax",
-        "code": "if x > 0:\n    print(\"positive\")\nelse:\n    print(\"non-positive\")"
+        "id": "python-syntax-list-literal",
+        "title": "リストリテラル",
+        "code": "numbers = [1, 2, 3, 4]",
+        "mode": "random_syntax"
       },
       {
-        "id": "python-l2-def",
-        "title": "Function definition",
-        "mode": "syntax",
-        "code": "def gcd(a: int, b: int) -> int:\n    while b:\n        a, b = b, a % b\n    return a"
+        "id": "python-syntax-if",
+        "title": "if文",
+        "code": "if x > 0:\n    print(\"positive\")\nelse:\n    print(\"non-positive\")",
+        "mode": "random_syntax"
+      },
+      {
+        "id": "python-syntax-def-gcd",
+        "title": "gcd関数",
+        "code": "def gcd(a: int, b: int) -> int:\n    while b:\n        a, b = b, a % b\n    return a",
+        "mode": "random_syntax"
+      },
+      {
+        "id": "python-syntax-fast-input",
+        "title": "高速入力",
+        "code": "import sys\ninput = sys.stdin.readline",
+        "mode": "random_syntax"
       }
     ],
-    "level_3": [
+    "algorithm": [
       {
-        "id": "python-l3-bfs",
-        "title": "BFS template",
-        "mode": "algorithm",
-        "code": "from collections import deque\n\ndef bfs(graph, start):\n    dist = {start: 0}\n    q = deque([start])\n    while q:\n        v = q.popleft()\n        for nv in graph[v]:\n            if nv in dist:\n                continue\n            dist[nv] = dist[v] + 1\n            q.append(nv)\n    return dist"
+        "id": "python-algo-bfs",
+        "title": "BFSテンプレート",
+        "code": "from collections import deque\n\ndef bfs(graph, start):\n    dist = {start: 0}\n    q = deque([start])\n    while q:\n        v = q.popleft()\n        for nv in graph[v]:\n            if nv in dist:\n                continue\n            dist[nv] = dist[v] + 1\n            q.append(nv)\n    return dist",
+        "mode": "algorithm"
+      },
+      {
+        "id": "python-algo-two-pointers",
+        "title": "尺取り法",
+        "code": "l = 0\nfor r in range(n):\n    while condition(l, r):\n        l += 1\n    ans = max(ans, r - l + 1)",
+        "mode": "algorithm"
       }
     ]
   },
   "rust": {
-    "level_1": [
+    "random_syntax": [
       {
-        "id": "rust-l1-let",
-        "title": "Mutable variable",
-        "mode": "syntax",
-        "code": "let mut count: i32 = 0;"
+        "id": "rust-syntax-let",
+        "title": "可変変数",
+        "code": "let mut count: i32 = 0;",
+        "mode": "random_syntax"
       },
       {
-        "id": "rust-l1-println",
-        "title": "println macro",
-        "mode": "syntax",
-        "code": "println!(\"Hello, Rust!\");"
-      }
-    ],
-    "level_2": [
-      {
-        "id": "rust-l2-match",
-        "title": "match construct",
-        "mode": "syntax",
-        "code": "match number {\n    1 => println!(\"One\"),\n    _ => println!(\"Other\"),\n}"
+        "id": "rust-syntax-println",
+        "title": "printlnマクロ",
+        "code": "println!(\"Hello, Rust!\");",
+        "mode": "random_syntax"
       },
       {
-        "id": "rust-l2-loop",
-        "title": "for with enumerate",
-        "mode": "syntax",
-        "code": "for (i, value) in values.iter().enumerate() {\n    println!(\"{} {}\", i, value);\n}"
-      }
-    ],
-    "level_3": [
-      {
-        "id": "rust-l3-dijkstra",
-        "title": "Dijkstra skeleton",
-        "mode": "algorithm",
-        "code": "use std::cmp::Reverse;\nuse std::collections::BinaryHeap;\n\nfn dijkstra(start: usize, graph: &[Vec<(usize, i64)>]) -> Vec<i64> {\n    let inf = i64::MAX / 4;\n    let mut dist = vec![inf; graph.len()];\n    let mut pq = BinaryHeap::new();\n    dist[start] = 0;\n    pq.push((Reverse(0_i64), start));\n\n    while let Some((Reverse(d), v)) = pq.pop() {\n        if d != dist[v] {\n            continue;\n        }\n        for &(nv, w) in &graph[v] {\n            if dist[nv] > d + w {\n                dist[nv] = d + w;\n                pq.push((Reverse(dist[nv]), nv));\n            }\n        }\n    }\n\n    dist\n}"
-      }
-    ]
-  },
-  "competitive_programming": {
-    "level_1": [
-      {
-        "id": "cp-l1-fast-io-cpp",
-        "title": "Fast IO (C++)",
-        "mode": "syntax",
-        "code": "ios::sync_with_stdio(false);\ncin.tie(nullptr);"
+        "id": "rust-syntax-match",
+        "title": "match構文",
+        "code": "match number {\n    1 => println!(\"One\"),\n    _ => println!(\"Other\"),\n}",
+        "mode": "random_syntax"
       },
       {
-        "id": "cp-l1-readline-py",
-        "title": "Fast input (Python)",
-        "mode": "syntax",
-        "code": "import sys\ninput = sys.stdin.readline"
+        "id": "rust-syntax-enumerate",
+        "title": "enumerate付きfor",
+        "code": "for (i, value) in values.iter().enumerate() {\n    println!(\"{} {}\", i, value);\n}",
+        "mode": "random_syntax"
       }
     ],
-    "level_2": [
+    "algorithm": [
       {
-        "id": "cp-l2-two-pointers",
-        "title": "Two pointers pattern",
-        "mode": "algorithm",
-        "code": "l = 0\nfor r in range(n):\n    while condition(l, r):\n        l += 1\n    ans = max(ans, r - l + 1)"
-      },
-      {
-        "id": "cp-l2-prefix-sum",
-        "title": "Prefix sum",
-        "mode": "algorithm",
-        "code": "vector<long long> pref(n + 1, 0);\nfor (int i = 0; i < n; i++) {\n    pref[i + 1] = pref[i] + a[i];\n}"
-      }
-    ],
-    "level_3": [
-      {
-        "id": "cp-l3-sieve",
-        "title": "Sieve of Eratosthenes (C++)",
-        "mode": "algorithm",
-        "code": "vector<bool> is_prime(N + 1, true);\nis_prime[0] = is_prime[1] = false;\nfor (int p = 2; p * p <= N; p++) {\n    if (is_prime[p]) {\n        for (int i = p * p; i <= N; i += p)\n            is_prime[i] = false;\n    }\n}"
+        "id": "rust-algo-dijkstra",
+        "title": "ダイクストラ法",
+        "code": "use std::cmp::Reverse;\nuse std::collections::BinaryHeap;\n\nfn dijkstra(start: usize, graph: &[Vec<(usize, i64)>]) -> Vec<i64> {\n    let inf = i64::MAX / 4;\n    let mut dist = vec![inf; graph.len()];\n    let mut pq = BinaryHeap::new();\n    dist[start] = 0;\n    pq.push((Reverse(0_i64), start));\n\n    while let Some((Reverse(d), v)) = pq.pop() {\n        if d != dist[v] {\n            continue;\n        }\n        for &(nv, w) in &graph[v] {\n            if dist[nv] > d + w {\n                dist[nv] = d + w;\n                pq.push((Reverse(dist[nv]), nv));\n            }\n        }\n    }\n\n    dist\n}",
+        "mode": "algorithm"
       }
     ]
   }

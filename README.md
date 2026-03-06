@@ -9,7 +9,7 @@
 - ローカルJSON問題セット + localStorage保存
 
 ## 主な機能（MVP）
-- 対応カテゴリ: C++, Python, Rust, 競技プログラミング
+- 対応カテゴリ: C++, Python, Rust
 - 出題モード:
   - ランダム構文
   - アルゴリズム

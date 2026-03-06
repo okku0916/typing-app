@@ -26,12 +26,12 @@
 
 ## データ契約
 - `src/data/problems.json`
-  - カテゴリ: `cpp`, `python`, `rust`, `competitive_programming`
-  - 難易度: `level_1`, `level_2`, `level_3`
+  - カテゴリ: `cpp`, `python`, `rust`
+  - モード: `random_syntax`, `algorithm`
   - 問題項目:
     - `id: string`
     - `title: string`
-    - `mode: "syntax" | "algorithm"`
+    - `mode: "random_syntax" | "algorithm"`
     - `code: string`
 
 ## アーキテクチャ

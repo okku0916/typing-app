@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
+import { useRouter } from "next/navigation";
 
 import { CategorySelector } from "@/components/game/CategorySelector";
 import { DifficultySelector } from "@/components/game/DifficultySelector";
@@ -16,15 +16,20 @@ import { DEFAULT_SETTINGS } from "@/types/settings";
 import type { SessionResult } from "@/types/session";
 
 export default function Home() {
+  const router = useRouter();
   const [settings, setSettings] = useLocalStorageState(STORAGE_KEYS.settings, DEFAULT_SETTINGS);
   const [latestResult] = useLocalStorageState<SessionResult | null>(
     STORAGE_KEYS.latestResult,
     null,
   );
 
-  const playHref = useMemo(() => {
-    return `/play?${toSearchParams(settings).toString()}`;
-  }, [settings]);
+  const handleStartSession = () => {
+    const params = toSearchParams(settings);
+    const cursor = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
+
+    params.set("cursor", String(cursor));
+    router.push(`/play?${params.toString()}`);
+  };
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-6 px-4 py-8 sm:px-6">
@@ -38,7 +43,7 @@ export default function Home() {
       </header>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <SelectorSection title="カテゴリ" subtitle="言語または競技向けセットを選択">
+        <SelectorSection title="カテゴリ" subtitle="使用する言語を選択">
           <CategorySelector
             value={settings.category}
             onChange={(category) => setSettings((prev) => ({ ...prev, category }))}
@@ -79,12 +84,13 @@ export default function Home() {
           </div>
 
           <div className="flex flex-wrap gap-3">
-            <Link
-              href={playHref}
+            <button
+              type="button"
+              onClick={handleStartSession}
               className="rounded-md border border-accent bg-accent px-5 py-2 text-sm font-semibold text-[#0a1220] transition hover:bg-accent/90"
             >
               セッション開始
-            </Link>
+            </button>
             <Link
               href="/result"
               className="rounded-md border border-panel-border px-5 py-2 text-sm font-semibold text-foreground transition hover:border-accent"
