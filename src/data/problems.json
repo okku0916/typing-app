@@ -1,0 +1,154 @@
+{
+  "cpp": {
+    "level_1": [
+      {
+        "id": "cpp-l1-include",
+        "title": "Include iostream",
+        "mode": "syntax",
+        "code": "#include <iostream>"
+      },
+      {
+        "id": "cpp-l1-using",
+        "title": "Using namespace",
+        "mode": "syntax",
+        "code": "using namespace std;"
+      }
+    ],
+    "level_2": [
+      {
+        "id": "cpp-l2-for",
+        "title": "for loop",
+        "mode": "syntax",
+        "code": "for (int i = 0; i < n; i++) {\n    cout << i << '\\n';\n}"
+      },
+      {
+        "id": "cpp-l2-function",
+        "title": "Function definition",
+        "mode": "syntax",
+        "code": "int add(int a, int b) {\n    return a + b;\n}"
+      }
+    ],
+    "level_3": [
+      {
+        "id": "cpp-l3-binary-search",
+        "title": "Binary Search",
+        "mode": "algorithm",
+        "code": "int binary_search(const vector<int>& a, int x) {\n    int l = 0, r = (int)a.size() - 1;\n    while (l <= r) {\n        int m = l + (r - l) / 2;\n        if (a[m] == x) return m;\n        if (a[m] < x) l = m + 1;\n        else r = m - 1;\n    }\n    return -1;\n}"
+      }
+    ]
+  },
+  "python": {
+    "level_1": [
+      {
+        "id": "python-l1-import",
+        "title": "Import sys",
+        "mode": "syntax",
+        "code": "import sys"
+      },
+      {
+        "id": "python-l1-list",
+        "title": "List literal",
+        "mode": "syntax",
+        "code": "numbers = [1, 2, 3, 4]"
+      }
+    ],
+    "level_2": [
+      {
+        "id": "python-l2-if",
+        "title": "if statement",
+        "mode": "syntax",
+        "code": "if x > 0:\n    print(\"positive\")\nelse:\n    print(\"non-positive\")"
+      },
+      {
+        "id": "python-l2-def",
+        "title": "Function definition",
+        "mode": "syntax",
+        "code": "def gcd(a: int, b: int) -> int:\n    while b:\n        a, b = b, a % b\n    return a"
+      }
+    ],
+    "level_3": [
+      {
+        "id": "python-l3-bfs",
+        "title": "BFS template",
+        "mode": "algorithm",
+        "code": "from collections import deque\n\ndef bfs(graph, start):\n    dist = {start: 0}\n    q = deque([start])\n    while q:\n        v = q.popleft()\n        for nv in graph[v]:\n            if nv in dist:\n                continue\n            dist[nv] = dist[v] + 1\n            q.append(nv)\n    return dist"
+      }
+    ]
+  },
+  "rust": {
+    "level_1": [
+      {
+        "id": "rust-l1-let",
+        "title": "Mutable variable",
+        "mode": "syntax",
+        "code": "let mut count: i32 = 0;"
+      },
+      {
+        "id": "rust-l1-println",
+        "title": "println macro",
+        "mode": "syntax",
+        "code": "println!(\"Hello, Rust!\");"
+      }
+    ],
+    "level_2": [
+      {
+        "id": "rust-l2-match",
+        "title": "match construct",
+        "mode": "syntax",
+        "code": "match number {\n    1 => println!(\"One\"),\n    _ => println!(\"Other\"),\n}"
+      },
+      {
+        "id": "rust-l2-loop",
+        "title": "for with enumerate",
+        "mode": "syntax",
+        "code": "for (i, value) in values.iter().enumerate() {\n    println!(\"{} {}\", i, value);\n}"
+      }
+    ],
+    "level_3": [
+      {
+        "id": "rust-l3-dijkstra",
+        "title": "Dijkstra skeleton",
+        "mode": "algorithm",
+        "code": "use std::cmp::Reverse;\nuse std::collections::BinaryHeap;\n\nfn dijkstra(start: usize, graph: &[Vec<(usize, i64)>]) -> Vec<i64> {\n    let inf = i64::MAX / 4;\n    let mut dist = vec![inf; graph.len()];\n    let mut pq = BinaryHeap::new();\n    dist[start] = 0;\n    pq.push((Reverse(0_i64), start));\n\n    while let Some((Reverse(d), v)) = pq.pop() {\n        if d != dist[v] {\n            continue;\n        }\n        for &(nv, w) in &graph[v] {\n            if dist[nv] > d + w {\n                dist[nv] = d + w;\n                pq.push((Reverse(dist[nv]), nv));\n            }\n        }\n    }\n\n    dist\n}"
+      }
+    ]
+  },
+  "competitive_programming": {
+    "level_1": [
+      {
+        "id": "cp-l1-fast-io-cpp",
+        "title": "Fast IO (C++)",
+        "mode": "syntax",
+        "code": "ios::sync_with_stdio(false);\ncin.tie(nullptr);"
+      },
+      {
+        "id": "cp-l1-readline-py",
+        "title": "Fast input (Python)",
+        "mode": "syntax",
+        "code": "import sys\ninput = sys.stdin.readline"
+      }
+    ],
+    "level_2": [
+      {
+        "id": "cp-l2-two-pointers",
+        "title": "Two pointers pattern",
+        "mode": "algorithm",
+        "code": "l = 0\nfor r in range(n):\n    while condition(l, r):\n        l += 1\n    ans = max(ans, r - l + 1)"
+      },
+      {
+        "id": "cp-l2-prefix-sum",
+        "title": "Prefix sum",
+        "mode": "algorithm",
+        "code": "vector<long long> pref(n + 1, 0);\nfor (int i = 0; i < n; i++) {\n    pref[i + 1] = pref[i] + a[i];\n}"
+      }
+    ],
+    "level_3": [
+      {
+        "id": "cp-l3-sieve",
+        "title": "Sieve of Eratosthenes (C++)",
+        "mode": "algorithm",
+        "code": "vector<bool> is_prime(N + 1, true);\nis_prime[0] = is_prime[1] = false;\nfor (int p = 2; p * p <= N; p++) {\n    if (is_prime[p]) {\n        for (int i = p * p; i <= N; i += p)\n            is_prime[i] = false;\n    }\n}"
+      }
+    ]
+  }
+}
