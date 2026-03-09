@@ -5,50 +5,114 @@
         "id": "cpp-syntax-include",
         "title": "iostreamのインクルード",
         "code": "#include <iostream>",
+        "difficulty": "level_1",
         "mode": "random_syntax"
       },
       {
         "id": "cpp-syntax-using",
         "title": "名前空間の宣言",
         "code": "using namespace std;",
+        "difficulty": "level_1",
         "mode": "random_syntax"
       },
       {
         "id": "cpp-syntax-fast-io",
         "title": "高速入出力",
         "code": "ios::sync_with_stdio(false);\ncin.tie(nullptr);",
+        "difficulty": "level_1",
+        "mode": "random_syntax"
+      },
+      {
+        "id": "cpp-syntax-vector",
+        "title": "vectorの宣言",
+        "code": "vector<int> a(n, 0);",
+        "difficulty": "level_1",
+        "mode": "random_syntax"
+      },
+      {
+        "id": "cpp-syntax-pair",
+        "title": "pairの初期化",
+        "code": "pair<int, int> p = {x, y};",
+        "difficulty": "level_1",
         "mode": "random_syntax"
       },
       {
         "id": "cpp-syntax-for",
         "title": "for文",
-        "code": "for (int i = 0; i < n; i++) {\n    cout << i << '\\n';\n}",
+        "code": "for (int i = 0; i < n; i++) {\n    cout << i << endl;\n}",
+        "difficulty": "level_2",
         "mode": "random_syntax"
       },
       {
         "id": "cpp-syntax-function",
         "title": "関数定義",
         "code": "int add(int a, int b) {\n    return a + b;\n}",
+        "difficulty": "level_2",
+        "mode": "random_syntax"
+      },
+      {
+        "id": "cpp-syntax-lambda",
+        "title": "ラムダ式",
+        "code": "auto chmax = [&](int& a, int b) {\n    if (a < b) a = b;\n};",
+        "difficulty": "level_2",
+        "mode": "random_syntax"
+      },
+      {
+        "id": "cpp-syntax-structured-binding",
+        "title": "構造化束縛",
+        "code": "for (auto [to, cost] : graph[v]) {\n    dist[to] = min(dist[to], dist[v] + cost);\n}",
+        "difficulty": "level_3",
+        "mode": "random_syntax"
+      },
+      {
+        "id": "cpp-syntax-class",
+        "title": "class定義",
+        "code": "class UnionFind {\npublic:\n    vector<int> parent;\n\n    explicit UnionFind(int n) : parent(n, -1) {}\n};",
+        "difficulty": "level_3",
         "mode": "random_syntax"
       }
     ],
     "algorithm": [
       {
-        "id": "cpp-algo-binary-search",
-        "title": "二分探索",
-        "code": "int binary_search(const vector<int>& a, int x) {\n    int l = 0, r = (int)a.size() - 1;\n    while (l <= r) {\n        int m = l + (r - l) / 2;\n        if (a[m] == x) return m;\n        if (a[m] < x) l = m + 1;\n        else r = m - 1;\n    }\n    return -1;\n}",
-        "mode": "algorithm"
-      },
-      {
         "id": "cpp-algo-prefix-sum",
         "title": "累積和",
         "code": "vector<long long> pref(n + 1, 0);\nfor (int i = 0; i < n; i++) {\n    pref[i + 1] = pref[i] + a[i];\n}",
+        "difficulty": "level_1",
+        "mode": "algorithm"
+      },
+      {
+        "id": "cpp-algo-binary-search",
+        "title": "二分探索",
+        "code": "int binary_search(const vector<int>& a, int x) {\n    int l = 0, r = (int)a.size() - 1;\n    while (l <= r) {\n        int m = l + (r - l) / 2;\n        if (a[m] == x) return m;\n        if (a[m] < x) l = m + 1;\n        else r = m - 1;\n    }\n    return -1;\n}",
+        "difficulty": "level_2",
+        "mode": "algorithm"
+      },
+      {
+        "id": "cpp-algo-bfs",
+        "title": "幅優先探索",
+        "code": "vector<int> dist(n, -1);\nqueue<int> q;\ndist[s] = 0;\nq.push(s);\nwhile (!q.empty()) {\n    int v = q.front();\n    q.pop();\n    for (int to : graph[v]) {\n        if (dist[to] != -1) continue;\n        dist[to] = dist[v] + 1;\n        q.push(to);\n    }\n}",
+        "difficulty": "level_2",
         "mode": "algorithm"
       },
       {
         "id": "cpp-algo-sieve",
         "title": "エラトステネスの篩",
-        "code": "vector<bool> is_prime(N + 1, true);\nis_prime[0] = is_prime[1] = false;\nfor (int p = 2; p * p <= N; p++) {\n    if (is_prime[p]) {\n        for (int i = p * p; i <= N; i += p)\n            is_prime[i] = false;\n    }\n}",
+        "code": "vector<bool> is_prime(N + 1, true);\nis_prime[0] = is_prime[1] = false;\nfor (int p = 2; p * p <= N; p++) {\n    if (is_prime[p]) {\n        for (int i = p * p; i <= N; i += p) {\n            is_prime[i] = false;\n        }\n    }\n}",
+        "difficulty": "level_3",
+        "mode": "algorithm"
+      },
+      {
+        "id": "cpp-algo-dp-knapsack",
+        "title": "ナップサックDP",
+        "code": "vector<long long> dp(W + 1, 0);\nfor (int i = 0; i < n; i++) {\n    for (int w = W; w >= weight[i]; w--) {\n        dp[w] = max(dp[w], dp[w - weight[i]] + value[i]);\n    }\n}",
+        "difficulty": "level_3",
+        "mode": "algorithm"
+      },
+      {
+        "id": "cpp-algo-dijkstra",
+        "title": "ダイクストラ法",
+        "code": "vector<long long> dist(n, INF);\npriority_queue<pair<long long, int>, vector<pair<long long, int>>, greater<pair<long long, int>>> pq;\ndist[s] = 0;\npq.push({0, s});\nwhile (!pq.empty()) {\n    auto [d, v] = pq.top();\n    pq.pop();\n    if (d != dist[v]) continue;\n    for (auto [to, cost] : graph[v]) {\n        if (dist[to] > d + cost) {\n            dist[to] = d + cost;\n            pq.push({dist[to], to});\n        }\n    }\n}",
+        "difficulty": "level_3",
         "mode": "algorithm"
       }
     ]
@@ -59,44 +123,107 @@
         "id": "python-syntax-import-sys",
         "title": "sysのインポート",
         "code": "import sys",
+        "difficulty": "level_1",
         "mode": "random_syntax"
       },
       {
         "id": "python-syntax-list-literal",
         "title": "リストリテラル",
         "code": "numbers = [1, 2, 3, 4]",
-        "mode": "random_syntax"
-      },
-      {
-        "id": "python-syntax-if",
-        "title": "if文",
-        "code": "if x > 0:\n    print(\"positive\")\nelse:\n    print(\"non-positive\")",
-        "mode": "random_syntax"
-      },
-      {
-        "id": "python-syntax-def-gcd",
-        "title": "gcd関数",
-        "code": "def gcd(a: int, b: int) -> int:\n    while b:\n        a, b = b, a % b\n    return a",
+        "difficulty": "level_1",
         "mode": "random_syntax"
       },
       {
         "id": "python-syntax-fast-input",
         "title": "高速入力",
         "code": "import sys\ninput = sys.stdin.readline",
+        "difficulty": "level_1",
+        "mode": "random_syntax"
+      },
+      {
+        "id": "python-syntax-if",
+        "title": "if文",
+        "code": "if x > 0:\n    print(\"positive\")\nelse:\n    print(\"non-positive\")",
+        "difficulty": "level_2",
+        "mode": "random_syntax"
+      },
+      {
+        "id": "python-syntax-def-gcd",
+        "title": "gcd関数",
+        "code": "def gcd(a: int, b: int) -> int:\n    while b:\n        a, b = b, a % b\n    return a",
+        "difficulty": "level_2",
+        "mode": "random_syntax"
+      },
+      {
+        "id": "python-syntax-try-except",
+        "title": "try-except",
+        "code": "try:\n    x = int(input())\nexcept ValueError:\n    x = 0",
+        "difficulty": "level_2",
+        "mode": "random_syntax"
+      },
+      {
+        "id": "python-syntax-list-comprehension",
+        "title": "リスト内包表記",
+        "code": "squares = [x * x for x in range(n) if x % 2 == 0]",
+        "difficulty": "level_3",
+        "mode": "random_syntax"
+      },
+      {
+        "id": "python-syntax-lambda-sort",
+        "title": "lambdaでソート",
+        "code": "points.sort(key=lambda p: (p[0], -p[1]))",
+        "difficulty": "level_3",
+        "mode": "random_syntax"
+      },
+      {
+        "id": "python-syntax-dict-comprehension",
+        "title": "辞書内包表記",
+        "code": "index = {value: i for i, value in enumerate(values)}",
+        "difficulty": "level_3",
         "mode": "random_syntax"
       }
     ],
     "algorithm": [
       {
-        "id": "python-algo-bfs",
-        "title": "BFSテンプレート",
-        "code": "from collections import deque\n\ndef bfs(graph, start):\n    dist = {start: 0}\n    q = deque([start])\n    while q:\n        v = q.popleft()\n        for nv in graph[v]:\n            if nv in dist:\n                continue\n            dist[nv] = dist[v] + 1\n            q.append(nv)\n    return dist",
+        "id": "python-algo-prefix-sum",
+        "title": "累積和",
+        "code": "prefix = [0] * (n + 1)\nfor i in range(n):\n    prefix[i + 1] = prefix[i] + a[i]",
+        "difficulty": "level_1",
         "mode": "algorithm"
       },
       {
         "id": "python-algo-two-pointers",
         "title": "尺取り法",
         "code": "l = 0\nfor r in range(n):\n    while condition(l, r):\n        l += 1\n    ans = max(ans, r - l + 1)",
+        "difficulty": "level_2",
+        "mode": "algorithm"
+      },
+      {
+        "id": "python-algo-bfs",
+        "title": "BFSテンプレート",
+        "code": "from collections import deque\n\ndef bfs(graph, start):\n    dist = {start: 0}\n    q = deque([start])\n    while q:\n        v = q.popleft()\n        for nv in graph[v]:\n            if nv in dist:\n                continue\n            dist[nv] = dist[v] + 1\n            q.append(nv)\n    return dist",
+        "difficulty": "level_2",
+        "mode": "algorithm"
+      },
+      {
+        "id": "python-algo-dp-frog",
+        "title": "カエルDP",
+        "code": "dp = [10 ** 18] * n\ndp[0] = 0\nfor i in range(1, n):\n    dp[i] = min(dp[i], dp[i - 1] + abs(h[i] - h[i - 1]))\n    if i >= 2:\n        dp[i] = min(dp[i], dp[i - 2] + abs(h[i] - h[i - 2]))",
+        "difficulty": "level_3",
+        "mode": "algorithm"
+      },
+      {
+        "id": "python-algo-topological-sort",
+        "title": "トポロジカルソート",
+        "code": "from collections import deque\n\nq = deque([v for v in range(n) if indeg[v] == 0])\norder = []\nwhile q:\n    v = q.popleft()\n    order.append(v)\n    for nv in graph[v]:\n        indeg[nv] -= 1\n        if indeg[nv] == 0:\n            q.append(nv)",
+        "difficulty": "level_3",
+        "mode": "algorithm"
+      },
+      {
+        "id": "python-algo-grid-bfs",
+        "title": "グリッドBFS",
+        "code": "from collections import deque\n\ndist = [[-1] * w for _ in range(h)]\nq = deque([(sy, sx)])\ndist[sy][sx] = 0\nwhile q:\n    y, x = q.popleft()\n    for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n        ny, nx = y + dy, x + dx\n        if not (0 <= ny < h and 0 <= nx < w):\n            continue\n        if grid[ny][nx] == \"#\" or dist[ny][nx] != -1:\n            continue\n        dist[ny][nx] = dist[y][x] + 1\n        q.append((ny, nx))",
+        "difficulty": "level_3",
         "mode": "algorithm"
       }
     ]
@@ -107,32 +234,100 @@
         "id": "rust-syntax-let",
         "title": "可変変数",
         "code": "let mut count: i32 = 0;",
+        "difficulty": "level_1",
         "mode": "random_syntax"
       },
       {
         "id": "rust-syntax-println",
         "title": "printlnマクロ",
         "code": "println!(\"Hello, Rust!\");",
+        "difficulty": "level_1",
         "mode": "random_syntax"
       },
       {
         "id": "rust-syntax-match",
         "title": "match構文",
         "code": "match number {\n    1 => println!(\"One\"),\n    _ => println!(\"Other\"),\n}",
+        "difficulty": "level_2",
         "mode": "random_syntax"
       },
       {
         "id": "rust-syntax-enumerate",
         "title": "enumerate付きfor",
         "code": "for (i, value) in values.iter().enumerate() {\n    println!(\"{} {}\", i, value);\n}",
+        "difficulty": "level_2",
+        "mode": "random_syntax"
+      },
+      {
+        "id": "rust-syntax-if-let",
+        "title": "if let",
+        "code": "if let Some(value) = stack.pop() {\n    println!(\"{}\", value);\n}",
+        "difficulty": "level_2",
+        "mode": "random_syntax"
+      },
+      {
+        "id": "rust-syntax-impl",
+        "title": "implブロック",
+        "code": "impl Point {\n    fn new(x: i64, y: i64) -> Self {\n        Self { x, y }\n    }\n}",
+        "difficulty": "level_3",
+        "mode": "random_syntax"
+      },
+      {
+        "id": "rust-syntax-lifetime",
+        "title": "ライフタイム注釈",
+        "code": "fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {\n    if x.len() > y.len() { x } else { y }\n}",
+        "difficulty": "level_3",
+        "mode": "random_syntax"
+      },
+      {
+        "id": "rust-syntax-result",
+        "title": "Resultのマッチ",
+        "code": "let value = match input.trim().parse::<i64>() {\n    Ok(v) => v,\n    Err(_) => 0,\n};",
+        "difficulty": "level_3",
         "mode": "random_syntax"
       }
     ],
     "algorithm": [
       {
+        "id": "rust-algo-prefix-sum",
+        "title": "累積和",
+        "code": "let mut prefix = vec![0_i64; n + 1];\nfor i in 0..n {\n    prefix[i + 1] = prefix[i] + a[i];\n}",
+        "difficulty": "level_1",
+        "mode": "algorithm"
+      },
+      {
+        "id": "rust-algo-binary-search",
+        "title": "二分探索",
+        "code": "let mut left = 0_usize;\nlet mut right = a.len();\nwhile left < right {\n    let mid = (left + right) / 2;\n    if a[mid] < x {\n        left = mid + 1;\n    } else {\n        right = mid;\n    }\n}",
+        "difficulty": "level_2",
+        "mode": "algorithm"
+      },
+      {
+        "id": "rust-algo-bfs",
+        "title": "BFSテンプレート",
+        "code": "use std::collections::VecDeque;\n\nlet mut dist = vec![-1_i64; n];\nlet mut q = VecDeque::new();\ndist[s] = 0;\nq.push_back(s);\nwhile let Some(v) = q.pop_front() {\n    for &to in &graph[v] {\n        if dist[to] != -1 {\n            continue;\n        }\n        dist[to] = dist[v] + 1;\n        q.push_back(to);\n    }\n}",
+        "difficulty": "level_2",
+        "mode": "algorithm"
+      },
+      {
         "id": "rust-algo-dijkstra",
         "title": "ダイクストラ法",
         "code": "use std::cmp::Reverse;\nuse std::collections::BinaryHeap;\n\nfn dijkstra(start: usize, graph: &[Vec<(usize, i64)>]) -> Vec<i64> {\n    let inf = i64::MAX / 4;\n    let mut dist = vec![inf; graph.len()];\n    let mut pq = BinaryHeap::new();\n    dist[start] = 0;\n    pq.push((Reverse(0_i64), start));\n\n    while let Some((Reverse(d), v)) = pq.pop() {\n        if d != dist[v] {\n            continue;\n        }\n        for &(nv, w) in &graph[v] {\n            if dist[nv] > d + w {\n                dist[nv] = d + w;\n                pq.push((Reverse(dist[nv]), nv));\n            }\n        }\n    }\n\n    dist\n}",
+        "difficulty": "level_3",
+        "mode": "algorithm"
+      },
+      {
+        "id": "rust-algo-dp-frog",
+        "title": "カエルDP",
+        "code": "let inf = 1_i64 << 60;\nlet mut dp = vec![inf; n];\ndp[0] = 0;\nfor i in 1..n {\n    dp[i] = dp[i].min(dp[i - 1] + (h[i] - h[i - 1]).abs());\n    if i >= 2 {\n        dp[i] = dp[i].min(dp[i - 2] + (h[i] - h[i - 2]).abs());\n    }\n}",
+        "difficulty": "level_3",
+        "mode": "algorithm"
+      },
+      {
+        "id": "rust-algo-topological-sort",
+        "title": "トポロジカルソート",
+        "code": "use std::collections::VecDeque;\n\nlet mut q = VecDeque::new();\nfor v in 0..n {\n    if indeg[v] == 0 {\n        q.push_back(v);\n    }\n}\nlet mut order = Vec::new();\nwhile let Some(v) = q.pop_front() {\n    order.push(v);\n    for &nv in &graph[v] {\n        indeg[nv] -= 1;\n        if indeg[nv] == 0 {\n            q.push_back(nv);\n        }\n    }\n}",
+        "difficulty": "level_3",
         "mode": "algorithm"
       }
     ]

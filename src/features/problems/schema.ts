@@ -25,6 +25,7 @@ function parseProblemItem(value: unknown, path: string): ProblemItem {
   const id = value.id;
   const title = value.title;
   const code = value.code;
+  const difficulty = value.difficulty;
   const mode = value.mode;
 
   if (typeof id !== "string" || id.length === 0) {
@@ -39,11 +40,15 @@ function parseProblemItem(value: unknown, path: string): ProblemItem {
     throw new Error(`${path}.code: code must be a non-empty string`);
   }
 
+  if (difficulty !== "level_1" && difficulty !== "level_2" && difficulty !== "level_3") {
+    throw new Error(`${path}.difficulty: difficulty must be level_1, level_2, or level_3`);
+  }
+
   if (mode !== "random_syntax" && mode !== "algorithm") {
     throw new Error(`${path}.mode: mode must be random_syntax or algorithm`);
   }
 
-  return { id, title, code, mode };
+  return { id, title, code, difficulty, mode };
 }
 
 function parseModeBucket(value: unknown, mode: DrillMode, path: string): ProblemItem[] {

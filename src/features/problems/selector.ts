@@ -7,18 +7,7 @@ function pickByIndex<T>(values: T[], cursor: number): T {
 }
 
 function applyDifficultyFilter(pool: ProblemItem[], difficulty: Difficulty): ProblemItem[] {
-  if (difficulty === "level_1") {
-    return pool.filter((problem) => problem.code.split("\n").length <= 4);
-  }
-
-  if (difficulty === "level_2") {
-    return pool.filter((problem) => {
-      const lines = problem.code.split("\n").length;
-      return lines >= 3 && lines <= 12;
-    });
-  }
-
-  return pool;
+  return pool.filter((problem) => problem.difficulty === difficulty);
 }
 
 export function getProblemPool(params: {

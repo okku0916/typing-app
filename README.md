@@ -44,4 +44,6 @@ npm run build
 
 ## データ
 - 問題データ: `src/data/problems.json`
+- 各問題は `category -> random_syntax | algorithm -> problems[]` の構造
+- 各問題に `difficulty` を持たせ、選択した難易度で出題を切り替え
 - 開発指針: `agent.md`
