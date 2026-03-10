@@ -8,6 +8,7 @@ export interface ProblemItem {
   id: string;
   title: string;
   code: string;
+  difficulty: Difficulty;
   mode: DrillMode;
 }
 

@@ -31,6 +31,7 @@
   - 問題項目:
     - `id: string`
     - `title: string`
+    - `difficulty: "level_1" | "level_2" | "level_3"`
     - `mode: "random_syntax" | "algorithm"`
     - `code: string`
 
