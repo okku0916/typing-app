@@ -30,6 +30,7 @@ interface SessionState {
   problem: SelectedProblem;
   engineState: TypingEngineState;
   result: SessionResult | null;
+  endReason: "completed" | "time_up" | null;
   cursor: number;
   aggregate: AggregateStats;
 }
@@ -39,6 +40,7 @@ export interface TypingSession {
   problem: SelectedProblem;
   engineState: TypingEngineState;
   result: SessionResult | null;
+  endReason: "completed" | "time_up" | null;
   elapsedSeconds: number;
   remainingSeconds: number | null;
   totalSeconds: number | null;
@@ -87,6 +89,7 @@ function createStateByCursor(
     problem,
     engineState: createInitialState(problem.code),
     result: null,
+    endReason: null,
     cursor,
     aggregate,
   };
@@ -110,7 +113,11 @@ export function useTypingSession(
 
   const elapsedRef = useRef(0);
   const totalSeconds =
-    config.gameMode === "timed" ? TIME_LIMITS[config.difficulty] : null;
+    config.gameMode === "timed"
+      ? config.drillMode === "random_syntax"
+        ? TIME_LIMITS[config.difficulty]
+        : TIME_LIMITS.level_3
+      : null;
 
   const finalizeSession = useCallback(
     (
@@ -156,6 +163,7 @@ export function useTypingSession(
           ...stats,
           completedProblems: nextAggregate.completedProblems,
         },
+        endReason: problemSolved ? "completed" : "time_up",
         completedAt: new Date().toISOString(),
       };
 
@@ -163,6 +171,7 @@ export function useTypingSession(
         ...baseState,
         status: "finished",
         result,
+        endReason: problemSolved ? "completed" : "time_up",
         aggregate: nextAggregate,
       };
     },
@@ -244,6 +253,7 @@ export function useTypingSession(
     problem: sessionState.problem,
     engineState: sessionState.engineState,
     result: sessionState.result,
+    endReason: sessionState.endReason,
     elapsedSeconds,
     remainingSeconds,
     totalSeconds,

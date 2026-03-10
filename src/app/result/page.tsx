@@ -32,6 +32,13 @@ export default function ResultPage() {
       <header className="rounded-xl border border-panel-border/70 bg-panel/80 p-5">
         <p className="text-xs uppercase tracking-[0.24em] text-accent">リザルト画面</p>
         <h1 className="mt-2 text-2xl font-semibold text-foreground">セッション結果</h1>
+        {latestResult ? (
+          <p className="mt-2 text-sm text-muted">
+            {latestResult.endReason === "time_up"
+              ? "時間切れで終了した結果です。"
+              : "問題を完了して終了した結果です。"}
+          </p>
+        ) : null}
       </header>
 
       {latestResult ? (

@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Suspense, useMemo } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useMemo } from "react";
 
 import { CodeView } from "@/components/editor/CodeView";
 import { TypingInput } from "@/components/editor/TypingInput";
@@ -24,7 +24,14 @@ interface PlaySessionViewProps {
 }
 
 function PlaySessionView({ config, initialCursor }: PlaySessionViewProps) {
+  const router = useRouter();
   const session = useTypingSession(config, initialCursor);
+
+  useEffect(() => {
+    if (session.status === "finished" && session.endReason === "time_up") {
+      router.replace("/result");
+    }
+  }, [router, session.endReason, session.status]);
 
   const progress =
     session.engineState.reference.length === 0
@@ -44,7 +51,10 @@ function PlaySessionView({ config, initialCursor }: PlaySessionViewProps) {
             <p className="text-xs uppercase tracking-[0.24em] text-accent">コードタイピング</p>
             <h1 className="mt-1 text-xl font-semibold text-foreground">{session.problem.title}</h1>
             <p className="mt-2 text-sm text-muted">
-              {CATEGORY_LABELS[config.category]} / {DIFFICULTY_LABELS[config.difficulty]} /{" "}
+              {CATEGORY_LABELS[config.category]} /{" "}
+              {config.drillMode === "random_syntax"
+                ? `${DIFFICULTY_LABELS[config.difficulty]} / `
+                : ""}
               {DRILL_MODE_LABELS[config.drillMode]} / {GAME_MODE_LABELS[config.gameMode]}
             </p>
             <p className="mt-1 text-xs text-muted">
@@ -110,6 +120,9 @@ function PlaySessionView({ config, initialCursor }: PlaySessionViewProps) {
           ) : (
             <p>無制限モードでは、1問完了ごとにリザルトを表示します。</p>
           )}
+          {config.drillMode === "algorithm" ? (
+            <p>アルゴリズムモードでは難易度による出題制限はなく、言語ごとのアルゴリズム問題から出題されます。</p>
+          ) : null}
         </div>
       )}
     </main>
