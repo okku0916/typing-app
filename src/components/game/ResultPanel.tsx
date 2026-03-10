@@ -5,11 +5,16 @@ interface ResultPanelProps {
 }
 
 export function ResultPanel({ result }: ResultPanelProps) {
-  const { stats } = result;
+  const { endReason, stats } = result;
 
   return (
     <section className="space-y-4 rounded-xl border border-panel-border/70 bg-panel p-5">
       <h2 className="text-lg font-semibold text-foreground">リザルト</h2>
+      <p className="text-sm text-muted">
+        {endReason === "time_up"
+          ? "制限時間に達したためセッションを終了しました。"
+          : "セッションを完了しました。"}
+      </p>
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <div className="rounded-lg border border-panel-border bg-background/40 p-3">

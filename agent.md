@@ -31,7 +31,7 @@
   - 問題項目:
     - `id: string`
     - `title: string`
-    - `difficulty: "level_1" | "level_2" | "level_3"`
+    - `difficulty?: "level_1" | "level_2" | "level_3"` (`random_syntax` では必須)
     - `mode: "random_syntax" | "algorithm"`
     - `code: string`
 
@@ -55,9 +55,10 @@
 
 ## デフォルト定数
 - 制限時間:
-  - `level_1`: 60秒
-  - `level_2`: 120秒
-  - `level_3`: 180秒
+  - `random_syntax level_1`: 60秒
+  - `random_syntax level_2`: 120秒
+  - `random_syntax level_3`: 180秒
+  - `algorithm`: 180秒
   - 無制限モード: 上限なし
 - ペナルティ: 1ミスごとに `-1`
 
@@ -72,8 +73,10 @@
 
 ## MVPの完了条件
 - ホーム画面でカテゴリ/出題モード/難易度/ゲームモードを選択できる。
+- アルゴリズムモードでは難易度による出題制限を行わない。
 - プレイ画面でリアルタイム判定、ミス表示、進捗、タイマーが動作する。
 - Enterでインデントスキップが機能する。
 - 通常モードで時間内に問題完了時、次の問題が自動出題される。
+- 時間切れ時は即座にリザルト画面へ遷移する。
 - リザルト画面でスコア/WPM/苦手キー/完了問題数を表示する。
 - 設定と最新リザルトがリロード後も復元される。

@@ -24,5 +24,6 @@ export interface SessionResult {
   config: SessionConfig;
   problem: SelectedProblem;
   stats: SessionStats;
+  endReason: "completed" | "time_up";
   completedAt: string;
 }

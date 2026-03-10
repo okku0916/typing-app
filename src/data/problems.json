@@ -70,6 +70,20 @@
         "code": "class UnionFind {\npublic:\n    vector<int> parent;\n\n    explicit UnionFind(int n) : parent(n, -1) {}\n};",
         "difficulty": "level_3",
         "mode": "random_syntax"
+      },
+      {
+        "id": "cpp-syntax-template",
+        "title": "template関数",
+        "code": "template <class T>\nT chmin(T& a, T b) {\n    if (a > b) a = b;\n    return a;\n}",
+        "difficulty": "level_3",
+        "mode": "random_syntax"
+      },
+      {
+        "id": "cpp-syntax-priority-queue",
+        "title": "priority_queueの宣言",
+        "code": "priority_queue<int, vector<int>, greater<int>> pq;",
+        "difficulty": "level_2",
+        "mode": "random_syntax"
       }
     ],
     "algorithm": [
@@ -112,6 +126,27 @@
         "id": "cpp-algo-dijkstra",
         "title": "ダイクストラ法",
         "code": "vector<long long> dist(n, INF);\npriority_queue<pair<long long, int>, vector<pair<long long, int>>, greater<pair<long long, int>>> pq;\ndist[s] = 0;\npq.push({0, s});\nwhile (!pq.empty()) {\n    auto [d, v] = pq.top();\n    pq.pop();\n    if (d != dist[v]) continue;\n    for (auto [to, cost] : graph[v]) {\n        if (dist[to] > d + cost) {\n            dist[to] = d + cost;\n            pq.push({dist[to], to});\n        }\n    }\n}",
+        "difficulty": "level_3",
+        "mode": "algorithm"
+      },
+      {
+        "id": "cpp-algo-warshall-floyd",
+        "title": "ワーシャルフロイド法",
+        "code": "for (int k = 0; k < n; k++) {\n    for (int i = 0; i < n; i++) {\n        for (int j = 0; j < n; j++) {\n            dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j]);\n        }\n    }\n}",
+        "difficulty": "level_3",
+        "mode": "algorithm"
+      },
+      {
+        "id": "cpp-algo-union-find",
+        "title": "Union-Find",
+        "code": "int find(int x) {\n    if (parent[x] < 0) return x;\n    return parent[x] = find(parent[x]);\n}\n\nbool unite(int x, int y) {\n    x = find(x);\n    y = find(y);\n    if (x == y) return false;\n    if (parent[x] > parent[y]) swap(x, y);\n    parent[x] += parent[y];\n    parent[y] = x;\n    return true;\n}",
+        "difficulty": "level_3",
+        "mode": "algorithm"
+      },
+      {
+        "id": "cpp-algo-segtree-build",
+        "title": "セグメント木の更新",
+        "code": "void update(int i, long long x) {\n    i += size;\n    seg[i] = x;\n    while (i > 1) {\n        i >>= 1;\n        seg[i] = seg[i << 1] + seg[i << 1 | 1];\n    }\n}",
         "difficulty": "level_3",
         "mode": "algorithm"
       }
@@ -181,6 +216,20 @@
         "code": "index = {value: i for i, value in enumerate(values)}",
         "difficulty": "level_3",
         "mode": "random_syntax"
+      },
+      {
+        "id": "python-syntax-generator",
+        "title": "ジェネレータ式",
+        "code": "total = sum(x * x for x in values if x % 2 == 1)",
+        "difficulty": "level_3",
+        "mode": "random_syntax"
+      },
+      {
+        "id": "python-syntax-defaultdict",
+        "title": "defaultdictの利用",
+        "code": "from collections import defaultdict\ncount = defaultdict(int)",
+        "difficulty": "level_2",
+        "mode": "random_syntax"
       }
     ],
     "algorithm": [
@@ -223,6 +272,27 @@
         "id": "python-algo-grid-bfs",
         "title": "グリッドBFS",
         "code": "from collections import deque\n\ndist = [[-1] * w for _ in range(h)]\nq = deque([(sy, sx)])\ndist[sy][sx] = 0\nwhile q:\n    y, x = q.popleft()\n    for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n        ny, nx = y + dy, x + dx\n        if not (0 <= ny < h and 0 <= nx < w):\n            continue\n        if grid[ny][nx] == \"#\" or dist[ny][nx] != -1:\n            continue\n        dist[ny][nx] = dist[y][x] + 1\n        q.append((ny, nx))",
+        "difficulty": "level_3",
+        "mode": "algorithm"
+      },
+      {
+        "id": "python-algo-dijkstra",
+        "title": "ダイクストラ法",
+        "code": "import heapq\n\ndist = [10 ** 18] * n\ndist[s] = 0\nhq = [(0, s)]\nwhile hq:\n    d, v = heapq.heappop(hq)\n    if d != dist[v]:\n        continue\n    for nv, cost in graph[v]:\n        nd = d + cost\n        if dist[nv] > nd:\n            dist[nv] = nd\n            heapq.heappush(hq, (nd, nv))",
+        "difficulty": "level_3",
+        "mode": "algorithm"
+      },
+      {
+        "id": "python-algo-union-find",
+        "title": "Union-Find",
+        "code": "def find(x):\n    if parent[x] < 0:\n        return x\n    parent[x] = find(parent[x])\n    return parent[x]\n\ndef unite(x, y):\n    x = find(x)\n    y = find(y)\n    if x == y:\n        return False\n    if parent[x] > parent[y]:\n        x, y = y, x\n    parent[x] += parent[y]\n    parent[y] = x\n    return True",
+        "difficulty": "level_3",
+        "mode": "algorithm"
+      },
+      {
+        "id": "python-algo-bit-dp",
+        "title": "bitDPの遷移",
+        "code": "for s in range(1 << n):\n    for v in range(n):\n        if dp[s][v] == INF:\n            continue\n        for nv in range(n):\n            if s >> nv & 1:\n                continue\n            ns = s | (1 << nv)\n            dp[ns][nv] = min(dp[ns][nv], dp[s][v] + cost[v][nv])",
         "difficulty": "level_3",
         "mode": "algorithm"
       }
@@ -285,6 +355,20 @@
         "code": "let value = match input.trim().parse::<i64>() {\n    Ok(v) => v,\n    Err(_) => 0,\n};",
         "difficulty": "level_3",
         "mode": "random_syntax"
+      },
+      {
+        "id": "rust-syntax-vec-macro",
+        "title": "vec!マクロ",
+        "code": "let dist = vec![i64::MAX; n];",
+        "difficulty": "level_1",
+        "mode": "random_syntax"
+      },
+      {
+        "id": "rust-syntax-hashmap-entry",
+        "title": "entry API",
+        "code": "*counter.entry(value).or_insert(0) += 1;",
+        "difficulty": "level_3",
+        "mode": "random_syntax"
       }
     ],
     "algorithm": [
@@ -327,6 +411,27 @@
         "id": "rust-algo-topological-sort",
         "title": "トポロジカルソート",
         "code": "use std::collections::VecDeque;\n\nlet mut q = VecDeque::new();\nfor v in 0..n {\n    if indeg[v] == 0 {\n        q.push_back(v);\n    }\n}\nlet mut order = Vec::new();\nwhile let Some(v) = q.pop_front() {\n    order.push(v);\n    for &nv in &graph[v] {\n        indeg[nv] -= 1;\n        if indeg[nv] == 0 {\n            q.push_back(nv);\n        }\n    }\n}",
+        "difficulty": "level_3",
+        "mode": "algorithm"
+      },
+      {
+        "id": "rust-algo-warshall-floyd",
+        "title": "ワーシャルフロイド法",
+        "code": "for k in 0..n {\n    for i in 0..n {\n        for j in 0..n {\n            dist[i][j] = dist[i][j].min(dist[i][k] + dist[k][j]);\n        }\n    }\n}",
+        "difficulty": "level_3",
+        "mode": "algorithm"
+      },
+      {
+        "id": "rust-algo-union-find",
+        "title": "Union-Find",
+        "code": "fn find(x: usize, parent: &mut [i32]) -> usize {\n    if parent[x] < 0 {\n        return x;\n    }\n    let root = find(parent[x] as usize, parent);\n    parent[x] = root as i32;\n    root\n}\n\nfn unite(x: usize, y: usize, parent: &mut [i32]) -> bool {\n    let mut x = find(x, parent);\n    let mut y = find(y, parent);\n    if x == y {\n        return false;\n    }\n    if parent[x] > parent[y] {\n        std::mem::swap(&mut x, &mut y);\n    }\n    parent[x] += parent[y];\n    parent[y] = x as i32;\n    true\n}",
+        "difficulty": "level_3",
+        "mode": "algorithm"
+      },
+      {
+        "id": "rust-algo-segtree-update",
+        "title": "セグメント木の更新",
+        "code": "fn update(mut i: usize, x: i64, seg: &mut [i64], size: usize) {\n    i += size;\n    seg[i] = x;\n    while i > 1 {\n        i >>= 1;\n        seg[i] = seg[i << 1] + seg[i << 1 | 1];\n    }\n}",
         "difficulty": "level_3",
         "mode": "algorithm"
       }

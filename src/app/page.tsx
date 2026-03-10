@@ -57,10 +57,18 @@ export default function Home() {
           />
         </SelectorSection>
 
-        <SelectorSection title="難易度" subtitle="出題内容と制限時間を調整">
+        <SelectorSection
+          title="難易度"
+          subtitle={
+            settings.drillMode === "random_syntax"
+              ? "基本構文モードの出題内容と制限時間を調整"
+              : "アルゴリズムモードでは難易度による出題制限はありません"
+          }
+        >
           <DifficultySelector
             value={settings.difficulty}
             onChange={(difficulty) => setSettings((prev) => ({ ...prev, difficulty }))}
+            disabled={settings.drillMode === "algorithm"}
           />
         </SelectorSection>
 
@@ -79,7 +87,9 @@ export default function Home() {
             <p className="code-font text-xl text-foreground">
               {settings.gameMode === "unlimited"
                 ? "無制限"
-                : `${TIME_LIMITS[settings.difficulty]} 秒（${DIFFICULTY_LABELS[settings.difficulty]}）`}
+                : settings.drillMode === "random_syntax"
+                  ? `${TIME_LIMITS[settings.difficulty]} 秒（${DIFFICULTY_LABELS[settings.difficulty]}）`
+                  : `${TIME_LIMITS.level_3} 秒（アルゴリズム共通）`}
             </p>
           </div>
 

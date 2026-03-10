@@ -40,12 +40,21 @@ function parseProblemItem(value: unknown, path: string): ProblemItem {
     throw new Error(`${path}.code: code must be a non-empty string`);
   }
 
-  if (difficulty !== "level_1" && difficulty !== "level_2" && difficulty !== "level_3") {
+  if (mode !== "random_syntax" && mode !== "algorithm") {
+    throw new Error(`${path}.mode: mode must be random_syntax or algorithm`);
+  }
+
+  if (
+    difficulty !== undefined &&
+    difficulty !== "level_1" &&
+    difficulty !== "level_2" &&
+    difficulty !== "level_3"
+  ) {
     throw new Error(`${path}.difficulty: difficulty must be level_1, level_2, or level_3`);
   }
 
-  if (mode !== "random_syntax" && mode !== "algorithm") {
-    throw new Error(`${path}.mode: mode must be random_syntax or algorithm`);
+  if (mode === "random_syntax" && difficulty === undefined) {
+    throw new Error(`${path}.difficulty: random_syntax problems require difficulty`);
   }
 
   return { id, title, code, difficulty, mode };

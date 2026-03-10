@@ -17,6 +17,11 @@ export function getProblemPool(params: {
 }) {
   const { category, difficulty, drillMode } = params;
   const modePool = problemsData[category][drillMode];
+
+  if (drillMode === "algorithm") {
+    return modePool;
+  }
+
   const filtered = applyDifficultyFilter(modePool, difficulty);
 
   if (filtered.length > 0) {
