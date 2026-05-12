@@ -50,6 +50,30 @@ function PlaySessionView({ config, initialCursor }: PlaySessionViewProps) {
           <div>
             <p className="text-xs uppercase tracking-[0.24em] text-accent">コードタイピング</p>
             <h1 className="mt-1 text-xl font-semibold text-foreground">{session.problem.title}</h1>
+            <div className="mt-2 flex flex-wrap gap-2 text-xs">
+              <span className="rounded-full border border-panel-border bg-background/40 px-3 py-1 text-foreground/80">
+                {CATEGORY_LABELS[config.category]}
+              </span>
+              {config.drillMode === "random_syntax" ? (
+                <span className="rounded-full border border-panel-border bg-background/40 px-3 py-1 text-foreground/80">
+                  {DIFFICULTY_LABELS[config.difficulty]}
+                </span>
+              ) : null}
+              <span className="rounded-full border border-panel-border bg-background/40 px-3 py-1 text-foreground/80">
+                {DRILL_MODE_LABELS[config.drillMode]}
+              </span>
+              <span className="rounded-full border border-panel-border bg-background/40 px-3 py-1 text-foreground/80">
+                {GAME_MODE_LABELS[config.gameMode]}
+              </span>
+              {session.problem.tags?.map((tag) => (
+                <span
+                  key={tag}
+                  className="rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-accent"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
             <p className="mt-2 text-sm text-muted">
               {CATEGORY_LABELS[config.category]} /{" "}
               {config.drillMode === "random_syntax"
