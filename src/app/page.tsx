@@ -8,19 +8,14 @@ import { DifficultySelector } from "@/components/game/DifficultySelector";
 import { GameModeSelector } from "@/components/game/GameModeSelector";
 import { ModeSelector } from "@/components/game/ModeSelector";
 import { useLocalStorageState } from "@/hooks/useLocalStorage";
-import { STORAGE_KEYS, TIME_LIMITS } from "@/lib/constants";
+import { STORAGE_KEYS } from "@/lib/constants";
 import { CATEGORY_LABELS, DIFFICULTY_LABELS } from "@/lib/labels";
 import { toSearchParams } from "@/lib/sessionConfig";
 import { DEFAULT_SETTINGS } from "@/types/settings";
-import type { SessionResult } from "@/types/session";
 
 export default function Home() {
   const router = useRouter();
   const [settings, setSettings] = useLocalStorageState(STORAGE_KEYS.settings, DEFAULT_SETTINGS);
-  const [latestResult] = useLocalStorageState<SessionResult | null>(
-    STORAGE_KEYS.latestResult,
-    null,
-  );
 
   const handleStartSession = () => {
     const params = toSearchParams(settings);
@@ -104,51 +99,28 @@ export default function Home() {
         </section>
       </div>
 
-      <section className="rounded-xl border border-panel-border/70 bg-panel/80 p-5">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <p className="text-xs text-muted">現在の制限時間</p>
-            <p className="code-font text-xl text-foreground">
-              {settings.gameMode === "unlimited"
-                ? "無制限"
-                : settings.drillMode === "random_syntax"
-                  ? `${TIME_LIMITS[settings.difficulty]} 秒（${DIFFICULTY_LABELS[settings.difficulty]}）`
-                  : `${TIME_LIMITS.level_3} 秒（アルゴリズム共通）`}
-            </p>
-          </div>
-
-          <div className="flex flex-wrap gap-3">
-            <button
-              type="button"
-              onClick={handleStartSession}
-              className="rounded-md border border-accent bg-accent px-5 py-2 text-sm font-semibold text-[#0a1220] transition hover:bg-accent/90"
-            >
-              セッション開始
-            </button>
-            <Link
-              href="/result"
-              className="rounded-md border border-panel-border px-5 py-2 text-sm font-semibold text-foreground transition hover:border-accent"
-            >
-              最新リザルト
-            </Link>
-            <Link
-              href="/rankings"
-              className="rounded-md border border-panel-border px-5 py-2 text-sm font-semibold text-foreground transition hover:border-accent"
-            >
-              ランキング
-            </Link>
-          </div>
+      <section className="rounded-2xl border border-panel-border/70 bg-panel/85 p-6">
+        <div className="grid gap-4 sm:grid-cols-3">
+          <button
+            type="button"
+            onClick={handleStartSession}
+            className="rounded-xl border border-accent bg-accent px-6 py-4 text-lg font-semibold text-[#0a1220] transition hover:bg-accent/90"
+          >
+            プレイ
+          </button>
+          <Link
+            href="/rankings"
+            className="rounded-xl border border-panel-border bg-background/30 px-6 py-4 text-lg font-semibold text-foreground transition hover:border-accent"
+          >
+            ランキング
+          </Link>
+          <Link
+            href="/result"
+            className="rounded-xl border border-panel-border bg-background/30 px-6 py-4 text-lg font-semibold text-foreground transition hover:border-accent"
+          >
+            最新リザルト
+          </Link>
         </div>
-
-        {latestResult ? (
-          <div className="mt-4 rounded-lg border border-panel-border bg-background/35 p-3">
-            <p className="text-xs text-muted">前回セッションの概要</p>
-            <p className="mt-2 text-sm text-foreground">
-              スコア {latestResult.stats.score} / WPM {latestResult.stats.wpm} / ミス数{" "}
-              {latestResult.stats.mistakeCount} / 完了問題数 {latestResult.stats.completedProblems}
-            </p>
-          </div>
-        ) : null}
       </section>
     </main>
   );

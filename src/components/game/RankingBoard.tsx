@@ -30,7 +30,7 @@ export function RankingBoard({ title, subtitle, entries, highlightId }: RankingB
         <div className="space-y-2">
           {entries.map((entry, index) => (
             <RankingEntryRow
-              key={entry.id}
+              key={`${entry.id}-${entry.createdAt}-${index}`}
               entry={entry}
               index={index}
               highlight={highlightId === entry.id}
