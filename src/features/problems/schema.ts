@@ -26,6 +26,7 @@ function parseProblemItem(value: unknown, path: string): ProblemItem {
   const title = value.title;
   const code = value.code;
   const difficulty = value.difficulty;
+  const tags = value.tags;
   const mode = value.mode;
 
   if (typeof id !== "string" || id.length === 0) {
@@ -57,7 +58,13 @@ function parseProblemItem(value: unknown, path: string): ProblemItem {
     throw new Error(`${path}.difficulty: random_syntax problems require difficulty`);
   }
 
-  return { id, title, code, difficulty, mode };
+  if (tags !== undefined) {
+    if (!Array.isArray(tags) || !tags.every((tag) => typeof tag === "string")) {
+      throw new Error(`${path}.tags: tags must be an array of strings`);
+    }
+  }
+
+  return { id, title, code, difficulty, mode, tags };
 }
 
 function parseModeBucket(value: unknown, mode: DrillMode, path: string): ProblemItem[] {

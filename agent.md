@@ -33,6 +33,7 @@
     - `title: string`
     - `difficulty?: "level_1" | "level_2" | "level_3"` (`random_syntax` では必須)
     - `mode: "random_syntax" | "algorithm"`
+    - `tags?: string[]` (`algorithm` での分類タグ)
     - `code: string`
 
 ## アーキテクチャ
