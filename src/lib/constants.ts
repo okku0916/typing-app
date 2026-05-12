@@ -11,4 +11,5 @@ export const SCORE_PENALTY_PER_MISS = 1;
 export const STORAGE_KEYS = {
   settings: "typing-app/settings",
   latestResult: "typing-app/latest-result",
+  rankings: "typing-app/rankings",
 } as const;

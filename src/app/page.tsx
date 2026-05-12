@@ -107,6 +107,12 @@ export default function Home() {
             >
               最新リザルト
             </Link>
+            <Link
+              href="/rankings"
+              className="rounded-md border border-panel-border px-5 py-2 text-sm font-semibold text-foreground transition hover:border-accent"
+            >
+              ランキング
+            </Link>
           </div>
         </div>
 

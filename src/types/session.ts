@@ -26,4 +26,5 @@ export interface SessionResult {
   stats: SessionStats;
   endReason: "completed" | "time_up";
   completedAt: string;
+  rankingId?: string;
 }

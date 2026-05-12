@@ -165,6 +165,7 @@ export function useTypingSession(
         },
         endReason: problemSolved ? "completed" : "time_up",
         completedAt: new Date().toISOString(),
+        rankingId: typeof crypto !== "undefined" ? crypto.randomUUID() : `session-${Date.now()}`,
       };
 
       return {

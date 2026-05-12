@@ -2,22 +2,51 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useMemo, useState } from "react";
 
+import { RankingBoard } from "@/components/game/RankingBoard";
+import { RankingSubmission } from "@/components/game/RankingSubmission";
 import { ResultPanel } from "@/components/game/ResultPanel";
 import { useLocalStorageState } from "@/hooks/useLocalStorage";
 import { STORAGE_KEYS } from "@/lib/constants";
+import { buildRankingKey, getRankingsByKey } from "@/lib/rankings";
+import { DIFFICULTY_LABELS } from "@/lib/labels";
 import { toSearchParams } from "@/lib/sessionConfig";
 import { DEFAULT_SETTINGS } from "@/types/settings";
 import type { AppSettings } from "@/types/settings";
+import type { RankingEntry } from "@/types/ranking";
 import type { SessionResult } from "@/types/session";
 
 export default function ResultPage() {
   const router = useRouter();
+  const [highlightId, setHighlightId] = useState<string | undefined>(undefined);
+  const [rankPosition, setRankPosition] = useState<number | null>(null);
   const [latestResult] = useLocalStorageState<SessionResult | null>(
     STORAGE_KEYS.latestResult,
     null,
   );
   const [settings] = useLocalStorageState<AppSettings>(STORAGE_KEYS.settings, DEFAULT_SETTINGS);
+
+  const rankingEntries = useMemo(() => {
+    if (!latestResult) {
+      return [];
+    }
+
+    const key = buildRankingKey(latestResult.config);
+    return getRankingsByKey(key);
+  }, [latestResult]);
+
+  const rankingTitle = latestResult
+    ? latestResult.config.drillMode === "random_syntax"
+      ? `ランダム構文 (${DIFFICULTY_LABELS[latestResult.config.difficulty]}) ランキング`
+      : "アルゴリズム ランキング"
+    : "ランキング";
+
+  const rankingSubtitle = latestResult
+    ? latestResult.config.drillMode === "random_syntax"
+      ? "難易度別のスコア上位を表示しています。"
+      : "言語別のアルゴリズム問題のスコア上位を表示しています。"
+    : "";
 
   const handleQuickPlay = () => {
     const params = toSearchParams(settings);
@@ -42,7 +71,35 @@ export default function ResultPage() {
       </header>
 
       {latestResult ? (
-        <ResultPanel result={latestResult} />
+        <div className="space-y-4">
+          <ResultPanel result={latestResult} />
+          {latestResult.endReason === "completed" ? (
+            <RankingSubmission
+              result={latestResult}
+              onSubmitted={(entry, rank) => {
+                setHighlightId(entry.id);
+                setRankPosition(rank);
+              }}
+            />
+          ) : (
+            <section className="rounded-xl border border-panel-border/70 bg-panel/80 p-5">
+              <p className="text-sm text-muted">
+                時間切れの場合はランキング登録の対象外です。
+              </p>
+            </section>
+          )}
+          <RankingBoard
+            title={rankingTitle}
+            subtitle={rankingSubtitle}
+            entries={rankingEntries as RankingEntry[]}
+            highlightId={highlightId}
+          />
+          {rankPosition ? (
+            <div className="rounded-xl border border-accent/50 bg-accent/10 p-4 text-sm text-foreground">
+              あなたの順位: <span className="code-font">#{rankPosition}</span>
+            </div>
+          ) : null}
+        </div>
       ) : (
         <section className="rounded-xl border border-panel-border/70 bg-panel/80 p-5">
           <p className="text-sm text-muted">まだ結果がありません。まずは1回プレイしてください。</p>
