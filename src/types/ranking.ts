@@ -10,4 +10,7 @@ export interface RankingEntry {
   config: AppSettings;
 }
 
-export type RankingMap = Record<string, RankingEntry[]>;
+export interface RankingMap {
+  _version?: number;
+  [key: string]: RankingEntry[] | number | undefined;
+}

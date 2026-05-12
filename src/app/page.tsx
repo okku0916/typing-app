@@ -7,10 +7,9 @@ import { CategorySelector } from "@/components/game/CategorySelector";
 import { DifficultySelector } from "@/components/game/DifficultySelector";
 import { GameModeSelector } from "@/components/game/GameModeSelector";
 import { ModeSelector } from "@/components/game/ModeSelector";
-import { SelectorSection } from "@/components/game/SelectorSection";
 import { useLocalStorageState } from "@/hooks/useLocalStorage";
 import { STORAGE_KEYS, TIME_LIMITS } from "@/lib/constants";
-import { DIFFICULTY_LABELS } from "@/lib/labels";
+import { CATEGORY_LABELS, DIFFICULTY_LABELS } from "@/lib/labels";
 import { toSearchParams } from "@/lib/sessionConfig";
 import { DEFAULT_SETTINGS } from "@/types/settings";
 import type { SessionResult } from "@/types/session";
@@ -42,42 +41,67 @@ export default function Home() {
         </p>
       </header>
 
-      <div className="grid gap-4 lg:grid-cols-2">
-        <SelectorSection title="カテゴリ" subtitle="使用する言語を選択">
+      <div className="grid gap-6">
+        <section className="grid gap-4 rounded-2xl border border-panel-border/70 bg-panel/85 p-5 lg:grid-cols-2">
+          <div>
+            <p className="text-xs uppercase tracking-[0.24em] text-accent">カテゴリ</p>
+            <h2 className="mt-2 text-2xl font-semibold text-foreground">
+              {CATEGORY_LABELS[settings.category]}
+            </h2>
+            <p className="mt-2 text-sm text-muted">使用する言語を選択してください。</p>
+          </div>
           <CategorySelector
             value={settings.category}
             onChange={(category) => setSettings((prev) => ({ ...prev, category }))}
           />
-        </SelectorSection>
+        </section>
 
-        <SelectorSection title="出題モード" subtitle="短文スニペットかアルゴリズム連続入力を選択">
+        <section className="grid gap-4 rounded-2xl border border-panel-border/70 bg-panel/85 p-5 lg:grid-cols-2">
+          <div>
+            <p className="text-xs uppercase tracking-[0.24em] text-accent">出題モード</p>
+            <h2 className="mt-2 text-2xl font-semibold text-foreground">{settings.drillMode === "random_syntax" ? "ランダム構文" : "アルゴリズム"}</h2>
+            <p className="mt-2 text-sm text-muted">短文スニペットかアルゴリズム連続入力を選択します。</p>
+          </div>
           <ModeSelector
             value={settings.drillMode}
             onChange={(drillMode) => setSettings((prev) => ({ ...prev, drillMode }))}
           />
-        </SelectorSection>
+        </section>
 
-        <SelectorSection
-          title="難易度"
-          subtitle={
-            settings.drillMode === "random_syntax"
-              ? "基本構文モードの出題内容と制限時間を調整"
-              : "アルゴリズムモードでは難易度による出題制限はありません"
-          }
-        >
+        <section className="grid gap-4 rounded-2xl border border-panel-border/70 bg-panel/85 p-5 lg:grid-cols-2">
+          <div>
+            <p className="text-xs uppercase tracking-[0.24em] text-accent">難易度</p>
+            <h2 className="mt-2 text-2xl font-semibold text-foreground">
+              {settings.drillMode === "random_syntax"
+                ? DIFFICULTY_LABELS[settings.difficulty]
+                : "アルゴリズム共通"}
+            </h2>
+            <p className="mt-2 text-sm text-muted">
+              {settings.drillMode === "random_syntax"
+                ? "基本構文モードの出題内容と制限時間を調整します。"
+                : "アルゴリズムモードでは難易度による出題制限はありません。"}
+            </p>
+          </div>
           <DifficultySelector
             value={settings.difficulty}
             onChange={(difficulty) => setSettings((prev) => ({ ...prev, difficulty }))}
             disabled={settings.drillMode === "algorithm"}
           />
-        </SelectorSection>
+        </section>
 
-        <SelectorSection title="ゲームモード" subtitle="時間制限あり / なしを切り替え">
+        <section className="grid gap-4 rounded-2xl border border-panel-border/70 bg-panel/85 p-5 lg:grid-cols-2">
+          <div>
+            <p className="text-xs uppercase tracking-[0.24em] text-accent">ゲームモード</p>
+            <h2 className="mt-2 text-2xl font-semibold text-foreground">
+              {settings.gameMode === "timed" ? "通常モード" : "無制限モード"}
+            </h2>
+            <p className="mt-2 text-sm text-muted">時間制限あり / なしを切り替えます。</p>
+          </div>
           <GameModeSelector
             value={settings.gameMode}
             onChange={(gameMode) => setSettings((prev) => ({ ...prev, gameMode }))}
           />
-        </SelectorSection>
+        </section>
       </div>
 
       <section className="rounded-xl border border-panel-border/70 bg-panel/80 p-5">

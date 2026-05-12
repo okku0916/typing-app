@@ -44,7 +44,7 @@ export function RankingSubmission({ result, onSubmitted }: RankingSubmissionProp
 
     const updated = addRankingEntry(entry);
     const key = buildRankingKey(result.config);
-    const updatedEntries = updated[key] ?? [];
+    const updatedEntries = Array.isArray(updated[key]) ? updated[key] : [];
     const rank = updatedEntries.findIndex((item) => item.id === entry.id) + 1;
 
     writeRankings(updated);
@@ -53,7 +53,8 @@ export function RankingSubmission({ result, onSubmitted }: RankingSubmissionProp
   };
 
   const key = buildRankingKey(result.config);
-  const totalEntries = (readRankings()[key] ?? []).length;
+  const rankingEntries = readRankings()[key];
+  const totalEntries = Array.isArray(rankingEntries) ? rankingEntries.length : 0;
 
   return (
     <section className="space-y-4 rounded-xl border border-panel-border/70 bg-panel/80 p-5">

@@ -47,41 +47,40 @@ function PlaySessionView({ config, initialCursor }: PlaySessionViewProps) {
     <main className="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-5 px-4 py-8 sm:px-6">
       <header className="space-y-4 rounded-xl border border-panel-border/70 bg-panel/80 p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
-          <div>
+          <div className="space-y-3">
             <p className="text-xs uppercase tracking-[0.24em] text-accent">コードタイピング</p>
-            <h1 className="mt-1 text-xl font-semibold text-foreground">{session.problem.title}</h1>
-            <div className="mt-2 flex flex-wrap gap-2 text-xs">
-              <span className="rounded-full border border-panel-border bg-background/40 px-3 py-1 text-foreground/80">
+            <h1 className="text-2xl font-semibold text-foreground sm:text-3xl">
+              {session.problem.title}
+            </h1>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="rounded-full border border-accent/60 bg-accent/15 px-4 py-1 text-sm font-semibold text-foreground">
                 {CATEGORY_LABELS[config.category]}
               </span>
               {config.drillMode === "random_syntax" ? (
-                <span className="rounded-full border border-panel-border bg-background/40 px-3 py-1 text-foreground/80">
+                <span className="rounded-full border border-warning/50 bg-warning/10 px-4 py-1 text-sm font-semibold text-foreground">
                   {DIFFICULTY_LABELS[config.difficulty]}
                 </span>
               ) : null}
-              <span className="rounded-full border border-panel-border bg-background/40 px-3 py-1 text-foreground/80">
+              <span className="rounded-full border border-panel-border bg-background/40 px-3 py-1 text-xs text-muted">
                 {DRILL_MODE_LABELS[config.drillMode]}
               </span>
-              <span className="rounded-full border border-panel-border bg-background/40 px-3 py-1 text-foreground/80">
+              <span className="rounded-full border border-panel-border bg-background/40 px-3 py-1 text-xs text-muted">
                 {GAME_MODE_LABELS[config.gameMode]}
               </span>
-              {session.problem.tags?.map((tag) => (
-                <span
-                  key={tag}
-                  className="rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-accent"
-                >
-                  {tag}
-                </span>
-              ))}
             </div>
-            <p className="mt-2 text-sm text-muted">
-              {CATEGORY_LABELS[config.category]} /{" "}
-              {config.drillMode === "random_syntax"
-                ? `${DIFFICULTY_LABELS[config.difficulty]} / `
-                : ""}
-              {DRILL_MODE_LABELS[config.drillMode]} / {GAME_MODE_LABELS[config.gameMode]}
-            </p>
-            <p className="mt-1 text-xs text-muted">
+            {session.problem.tags && session.problem.tags.length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {session.problem.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="rounded-md border border-accent/40 bg-accent/10 px-3 py-1 text-xs text-accent"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            ) : null}
+            <p className="text-sm text-muted">
               解答済み問題数: <span className="code-font text-foreground">{session.completedProblems}</span>
             </p>
           </div>
@@ -137,15 +136,16 @@ function PlaySessionView({ config, initialCursor }: PlaySessionViewProps) {
           </div>
         </div>
       ) : (
-        <div className="space-y-1 text-sm text-muted">
-          <p>表示されたコードをそのまま入力してください。ミスは赤で表示され、スコアから減点されます。</p>
+        <div className="rounded-xl border border-panel-border/70 bg-panel/70 p-4 text-sm text-muted">
+          <p className="text-foreground">操作ガイド</p>
+          <p className="mt-1">表示されたコードをそのまま入力してください。ミスは赤で表示され、スコアから減点されます。</p>
           {config.gameMode === "timed" ? (
-            <p>通常モードでは、時間が残っている限り、問題を完了すると次の問題が自動で出題されます。</p>
+            <p className="mt-1">通常モードでは、時間が残っている限り、問題を完了すると次の問題が自動で出題されます。</p>
           ) : (
-            <p>無制限モードでは、1問完了ごとにリザルトを表示します。</p>
+            <p className="mt-1">無制限モードでは、1問完了ごとにリザルトを表示します。</p>
           )}
           {config.drillMode === "algorithm" ? (
-            <p>アルゴリズムモードでは難易度による出題制限はなく、言語ごとのアルゴリズム問題から出題されます。</p>
+            <p className="mt-1">アルゴリズムモードでは難易度による出題制限はなく、言語ごとのアルゴリズム問題から出題されます。</p>
           ) : null}
         </div>
       )}

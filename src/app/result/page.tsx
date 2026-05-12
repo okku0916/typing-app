@@ -7,7 +7,7 @@ import { useMemo, useState } from "react";
 import { RankingBoard } from "@/components/game/RankingBoard";
 import { RankingSubmission } from "@/components/game/RankingSubmission";
 import { ResultPanel } from "@/components/game/ResultPanel";
-import { useLocalStorageState } from "@/hooks/useLocalStorage";
+import { useLocalStorageState, useLocalStorageVersion } from "@/hooks/useLocalStorage";
 import { STORAGE_KEYS } from "@/lib/constants";
 import { buildRankingKey, getRankingsByKey } from "@/lib/rankings";
 import { DIFFICULTY_LABELS } from "@/lib/labels";
@@ -26,15 +26,17 @@ export default function ResultPage() {
     null,
   );
   const [settings] = useLocalStorageState<AppSettings>(STORAGE_KEYS.settings, DEFAULT_SETTINGS);
+  const rankingsVersion = useLocalStorageVersion(STORAGE_KEYS.rankings);
 
   const rankingEntries = useMemo(() => {
     if (!latestResult) {
       return [];
     }
 
+    void rankingsVersion;
     const key = buildRankingKey(latestResult.config);
     return getRankingsByKey(key);
-  }, [latestResult]);
+  }, [latestResult, rankingsVersion]);
 
   const rankingTitle = latestResult
     ? latestResult.config.drillMode === "random_syntax"
@@ -73,21 +75,13 @@ export default function ResultPage() {
       {latestResult ? (
         <div className="space-y-4">
           <ResultPanel result={latestResult} />
-          {latestResult.endReason === "completed" ? (
-            <RankingSubmission
-              result={latestResult}
-              onSubmitted={(entry, rank) => {
-                setHighlightId(entry.id);
-                setRankPosition(rank);
-              }}
-            />
-          ) : (
-            <section className="rounded-xl border border-panel-border/70 bg-panel/80 p-5">
-              <p className="text-sm text-muted">
-                時間切れの場合はランキング登録の対象外です。
-              </p>
-            </section>
-          )}
+          <RankingSubmission
+            result={latestResult}
+            onSubmitted={(entry, rank) => {
+              setHighlightId(entry.id);
+              setRankPosition(rank);
+            }}
+          />
           <RankingBoard
             title={rankingTitle}
             subtitle={rankingSubtitle}

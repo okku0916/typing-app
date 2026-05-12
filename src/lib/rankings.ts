@@ -35,24 +35,30 @@ function sortEntries(entries: RankingEntry[]) {
 export function addRankingEntry(entry: RankingEntry, maxEntries = 50) {
   const rankings = readRankings();
   const key = buildRankingKey(entry.config);
-  const current = rankings[key] ?? [];
+  const current = Array.isArray(rankings[key]) ? rankings[key] : [];
   const updated = sortEntries([...current, entry]).slice(0, maxEntries);
 
   return {
     ...rankings,
     [key]: updated,
+    _version: Number(rankings._version ?? 0) + 1,
   };
 }
 
 export function getRankingsByKey(key: string): RankingEntry[] {
   const rankings = readRankings();
-  return rankings[key] ?? [];
+  return Array.isArray(rankings[key]) ? rankings[key] : [];
+}
+
+export function getRankingsVersion(): number {
+  const rankings = readRankings();
+  return Number(rankings._version ?? 0);
 }
 
 export function getRankingPosition(entry: RankingEntry) {
   const key = buildRankingKey(entry.config);
   const rankings = readRankings();
-  const current = rankings[key] ?? [];
+  const current = Array.isArray(rankings[key]) ? rankings[key] : [];
   const next = sortEntries([...current, entry]);
 
   return next.findIndex((item) => item.id === entry.id) + 1;
