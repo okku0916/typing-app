@@ -15,6 +15,7 @@ export function RankingSubmission({ result, onSubmitted }: RankingSubmissionProp
   const [nickname, setNickname] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
 
   const handleSubmit = () => {
     const trimmed = nickname.trim();
@@ -26,6 +27,11 @@ export function RankingSubmission({ result, onSubmitted }: RankingSubmissionProp
 
     if (trimmed.length > 16) {
       setError("ニックネームは16文字以内にしてください。");
+      return;
+    }
+
+    if (hasSubmitted) {
+      setError("このセッションはすでに登録済みです。");
       return;
     }
 
@@ -49,6 +55,7 @@ export function RankingSubmission({ result, onSubmitted }: RankingSubmissionProp
 
     writeRankings(updated);
     onSubmitted(entry, rank);
+    setHasSubmitted(true);
     setIsSubmitting(false);
   };
 
@@ -75,10 +82,10 @@ export function RankingSubmission({ result, onSubmitted }: RankingSubmissionProp
         <button
           type="button"
           onClick={handleSubmit}
-          disabled={isSubmitting}
+          disabled={isSubmitting || hasSubmitted}
           className="rounded-md border border-accent bg-accent px-4 py-2 text-sm font-semibold text-[#0a1220] transition hover:bg-accent/90 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          登録する
+          {hasSubmitted ? "登録済み" : "登録する"}
         </button>
       </div>
 

@@ -36,7 +36,8 @@ export function addRankingEntry(entry: RankingEntry, maxEntries = 50) {
   const rankings = readRankings();
   const key = buildRankingKey(entry.config);
   const current = Array.isArray(rankings[key]) ? rankings[key] : [];
-  const updated = sortEntries([...current, entry]).slice(0, maxEntries);
+  const deduped = current.filter((item) => item.id !== entry.id);
+  const updated = sortEntries([...deduped, entry]).slice(0, maxEntries);
 
   return {
     ...rankings,
