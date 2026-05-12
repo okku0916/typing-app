@@ -10,6 +10,7 @@ export interface ProblemItem {
   code: string;
   difficulty?: Difficulty;
   mode: DrillMode;
+  tags?: string[];
 }
 
 export type ProblemsByMode = Record<DrillMode, ProblemItem[]>;

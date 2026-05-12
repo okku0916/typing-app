@@ -26,6 +26,11 @@
   - 苦手キー Top 3
   - 完了問題数（通常モード）
 
+## デプロイ版へのアクセス
+以下のURLからアクセスできます。
+
+`https://typing-app-tawny.vercel.app/`
+
 ## 起動方法
 
 ```bash

@@ -92,6 +92,7 @@
         "title": "累積和",
         "code": "vector<long long> pref(n + 1, 0);\nfor (int i = 0; i < n; i++) {\n    pref[i + 1] = pref[i] + a[i];\n}",
         "difficulty": "level_1",
+        "tags": ["prefix_sum"],
         "mode": "algorithm"
       },
       {
@@ -99,6 +100,7 @@
         "title": "二分探索",
         "code": "int binary_search(const vector<int>& a, int x) {\n    int l = 0, r = (int)a.size() - 1;\n    while (l <= r) {\n        int m = l + (r - l) / 2;\n        if (a[m] == x) return m;\n        if (a[m] < x) l = m + 1;\n        else r = m - 1;\n    }\n    return -1;\n}",
         "difficulty": "level_2",
+        "tags": ["binary_search"],
         "mode": "algorithm"
       },
       {
@@ -106,6 +108,7 @@
         "title": "幅優先探索",
         "code": "vector<int> dist(n, -1);\nqueue<int> q;\ndist[s] = 0;\nq.push(s);\nwhile (!q.empty()) {\n    int v = q.front();\n    q.pop();\n    for (int to : graph[v]) {\n        if (dist[to] != -1) continue;\n        dist[to] = dist[v] + 1;\n        q.push(to);\n    }\n}",
         "difficulty": "level_2",
+        "tags": ["graph", "bfs"],
         "mode": "algorithm"
       },
       {
@@ -113,6 +116,7 @@
         "title": "エラトステネスの篩",
         "code": "vector<bool> is_prime(N + 1, true);\nis_prime[0] = is_prime[1] = false;\nfor (int p = 2; p * p <= N; p++) {\n    if (is_prime[p]) {\n        for (int i = p * p; i <= N; i += p) {\n            is_prime[i] = false;\n        }\n    }\n}",
         "difficulty": "level_3",
+        "tags": ["math", "sieve"],
         "mode": "algorithm"
       },
       {
@@ -120,6 +124,7 @@
         "title": "ナップサックDP",
         "code": "vector<long long> dp(W + 1, 0);\nfor (int i = 0; i < n; i++) {\n    for (int w = W; w >= weight[i]; w--) {\n        dp[w] = max(dp[w], dp[w - weight[i]] + value[i]);\n    }\n}",
         "difficulty": "level_3",
+        "tags": ["dp", "knapsack"],
         "mode": "algorithm"
       },
       {
@@ -127,6 +132,7 @@
         "title": "ダイクストラ法",
         "code": "vector<long long> dist(n, INF);\npriority_queue<pair<long long, int>, vector<pair<long long, int>>, greater<pair<long long, int>>> pq;\ndist[s] = 0;\npq.push({0, s});\nwhile (!pq.empty()) {\n    auto [d, v] = pq.top();\n    pq.pop();\n    if (d != dist[v]) continue;\n    for (auto [to, cost] : graph[v]) {\n        if (dist[to] > d + cost) {\n            dist[to] = d + cost;\n            pq.push({dist[to], to});\n        }\n    }\n}",
         "difficulty": "level_3",
+        "tags": ["graph", "dijkstra"],
         "mode": "algorithm"
       },
       {
@@ -134,6 +140,7 @@
         "title": "ワーシャルフロイド法",
         "code": "for (int k = 0; k < n; k++) {\n    for (int i = 0; i < n; i++) {\n        for (int j = 0; j < n; j++) {\n            dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j]);\n        }\n    }\n}",
         "difficulty": "level_3",
+        "tags": ["graph", "warshall_floyd"],
         "mode": "algorithm"
       },
       {
@@ -141,6 +148,7 @@
         "title": "Union-Find",
         "code": "int find(int x) {\n    if (parent[x] < 0) return x;\n    return parent[x] = find(parent[x]);\n}\n\nbool unite(int x, int y) {\n    x = find(x);\n    y = find(y);\n    if (x == y) return false;\n    if (parent[x] > parent[y]) swap(x, y);\n    parent[x] += parent[y];\n    parent[y] = x;\n    return true;\n}",
         "difficulty": "level_3",
+        "tags": ["data_structure", "union_find"],
         "mode": "algorithm"
       },
       {
@@ -148,6 +156,15 @@
         "title": "セグメント木の更新",
         "code": "void update(int i, long long x) {\n    i += size;\n    seg[i] = x;\n    while (i > 1) {\n        i >>= 1;\n        seg[i] = seg[i << 1] + seg[i << 1 | 1];\n    }\n}",
         "difficulty": "level_3",
+        "tags": ["data_structure", "segment_tree"],
+        "mode": "algorithm"
+      },
+      {
+        "id": "cpp-algo-sparse-table",
+        "title": "スパーステーブル",
+        "code": "for (int i = 0; i < n; i++) {\n    st[0][i] = a[i];\n}\nfor (int k = 1; k < LOG; k++) {\n    for (int i = 0; i + (1 << k) <= n; i++) {\n        st[k][i] = min(st[k - 1][i], st[k - 1][i + (1 << (k - 1))]);\n    }\n}",
+        "difficulty": "level_3",
+        "tags": ["data_structure", "sparse_table"],
         "mode": "algorithm"
       }
     ]
@@ -238,6 +255,7 @@
         "title": "累積和",
         "code": "prefix = [0] * (n + 1)\nfor i in range(n):\n    prefix[i + 1] = prefix[i] + a[i]",
         "difficulty": "level_1",
+        "tags": ["prefix_sum"],
         "mode": "algorithm"
       },
       {
@@ -245,6 +263,7 @@
         "title": "尺取り法",
         "code": "l = 0\nfor r in range(n):\n    while condition(l, r):\n        l += 1\n    ans = max(ans, r - l + 1)",
         "difficulty": "level_2",
+        "tags": ["two_pointers"],
         "mode": "algorithm"
       },
       {
@@ -252,6 +271,7 @@
         "title": "BFSテンプレート",
         "code": "from collections import deque\n\ndef bfs(graph, start):\n    dist = {start: 0}\n    q = deque([start])\n    while q:\n        v = q.popleft()\n        for nv in graph[v]:\n            if nv in dist:\n                continue\n            dist[nv] = dist[v] + 1\n            q.append(nv)\n    return dist",
         "difficulty": "level_2",
+        "tags": ["graph", "bfs"],
         "mode": "algorithm"
       },
       {
@@ -259,6 +279,7 @@
         "title": "カエルDP",
         "code": "dp = [10 ** 18] * n\ndp[0] = 0\nfor i in range(1, n):\n    dp[i] = min(dp[i], dp[i - 1] + abs(h[i] - h[i - 1]))\n    if i >= 2:\n        dp[i] = min(dp[i], dp[i - 2] + abs(h[i] - h[i - 2]))",
         "difficulty": "level_3",
+        "tags": ["dp"],
         "mode": "algorithm"
       },
       {
@@ -266,6 +287,7 @@
         "title": "トポロジカルソート",
         "code": "from collections import deque\n\nq = deque([v for v in range(n) if indeg[v] == 0])\norder = []\nwhile q:\n    v = q.popleft()\n    order.append(v)\n    for nv in graph[v]:\n        indeg[nv] -= 1\n        if indeg[nv] == 0:\n            q.append(nv)",
         "difficulty": "level_3",
+        "tags": ["graph", "topological_sort"],
         "mode": "algorithm"
       },
       {
@@ -273,6 +295,7 @@
         "title": "グリッドBFS",
         "code": "from collections import deque\n\ndist = [[-1] * w for _ in range(h)]\nq = deque([(sy, sx)])\ndist[sy][sx] = 0\nwhile q:\n    y, x = q.popleft()\n    for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n        ny, nx = y + dy, x + dx\n        if not (0 <= ny < h and 0 <= nx < w):\n            continue\n        if grid[ny][nx] == \"#\" or dist[ny][nx] != -1:\n            continue\n        dist[ny][nx] = dist[y][x] + 1\n        q.append((ny, nx))",
         "difficulty": "level_3",
+        "tags": ["graph", "grid"],
         "mode": "algorithm"
       },
       {
@@ -280,6 +303,7 @@
         "title": "ダイクストラ法",
         "code": "import heapq\n\ndist = [10 ** 18] * n\ndist[s] = 0\nhq = [(0, s)]\nwhile hq:\n    d, v = heapq.heappop(hq)\n    if d != dist[v]:\n        continue\n    for nv, cost in graph[v]:\n        nd = d + cost\n        if dist[nv] > nd:\n            dist[nv] = nd\n            heapq.heappush(hq, (nd, nv))",
         "difficulty": "level_3",
+        "tags": ["graph", "dijkstra"],
         "mode": "algorithm"
       },
       {
@@ -287,6 +311,7 @@
         "title": "Union-Find",
         "code": "def find(x):\n    if parent[x] < 0:\n        return x\n    parent[x] = find(parent[x])\n    return parent[x]\n\ndef unite(x, y):\n    x = find(x)\n    y = find(y)\n    if x == y:\n        return False\n    if parent[x] > parent[y]:\n        x, y = y, x\n    parent[x] += parent[y]\n    parent[y] = x\n    return True",
         "difficulty": "level_3",
+        "tags": ["data_structure", "union_find"],
         "mode": "algorithm"
       },
       {
@@ -294,6 +319,15 @@
         "title": "bitDPの遷移",
         "code": "for s in range(1 << n):\n    for v in range(n):\n        if dp[s][v] == INF:\n            continue\n        for nv in range(n):\n            if s >> nv & 1:\n                continue\n            ns = s | (1 << nv)\n            dp[ns][nv] = min(dp[ns][nv], dp[s][v] + cost[v][nv])",
         "difficulty": "level_3",
+        "tags": ["dp", "bit_dp"],
+        "mode": "algorithm"
+      },
+      {
+        "id": "python-algo-segment-tree",
+        "title": "セグメント木の更新",
+        "code": "def update(i, x):\n    i += size\n    seg[i] = x\n    while i > 1:\n        i //= 2\n        seg[i] = seg[i * 2] + seg[i * 2 + 1]",
+        "difficulty": "level_3",
+        "tags": ["data_structure", "segment_tree"],
         "mode": "algorithm"
       }
     ]
@@ -377,6 +411,7 @@
         "title": "累積和",
         "code": "let mut prefix = vec![0_i64; n + 1];\nfor i in 0..n {\n    prefix[i + 1] = prefix[i] + a[i];\n}",
         "difficulty": "level_1",
+        "tags": ["prefix_sum"],
         "mode": "algorithm"
       },
       {
@@ -384,6 +419,7 @@
         "title": "二分探索",
         "code": "let mut left = 0_usize;\nlet mut right = a.len();\nwhile left < right {\n    let mid = (left + right) / 2;\n    if a[mid] < x {\n        left = mid + 1;\n    } else {\n        right = mid;\n    }\n}",
         "difficulty": "level_2",
+        "tags": ["binary_search"],
         "mode": "algorithm"
       },
       {
@@ -391,6 +427,7 @@
         "title": "BFSテンプレート",
         "code": "use std::collections::VecDeque;\n\nlet mut dist = vec![-1_i64; n];\nlet mut q = VecDeque::new();\ndist[s] = 0;\nq.push_back(s);\nwhile let Some(v) = q.pop_front() {\n    for &to in &graph[v] {\n        if dist[to] != -1 {\n            continue;\n        }\n        dist[to] = dist[v] + 1;\n        q.push_back(to);\n    }\n}",
         "difficulty": "level_2",
+        "tags": ["graph", "bfs"],
         "mode": "algorithm"
       },
       {
@@ -398,6 +435,7 @@
         "title": "ダイクストラ法",
         "code": "use std::cmp::Reverse;\nuse std::collections::BinaryHeap;\n\nfn dijkstra(start: usize, graph: &[Vec<(usize, i64)>]) -> Vec<i64> {\n    let inf = i64::MAX / 4;\n    let mut dist = vec![inf; graph.len()];\n    let mut pq = BinaryHeap::new();\n    dist[start] = 0;\n    pq.push((Reverse(0_i64), start));\n\n    while let Some((Reverse(d), v)) = pq.pop() {\n        if d != dist[v] {\n            continue;\n        }\n        for &(nv, w) in &graph[v] {\n            if dist[nv] > d + w {\n                dist[nv] = d + w;\n                pq.push((Reverse(dist[nv]), nv));\n            }\n        }\n    }\n\n    dist\n}",
         "difficulty": "level_3",
+        "tags": ["graph", "dijkstra"],
         "mode": "algorithm"
       },
       {
@@ -405,6 +443,7 @@
         "title": "カエルDP",
         "code": "let inf = 1_i64 << 60;\nlet mut dp = vec![inf; n];\ndp[0] = 0;\nfor i in 1..n {\n    dp[i] = dp[i].min(dp[i - 1] + (h[i] - h[i - 1]).abs());\n    if i >= 2 {\n        dp[i] = dp[i].min(dp[i - 2] + (h[i] - h[i - 2]).abs());\n    }\n}",
         "difficulty": "level_3",
+        "tags": ["dp"],
         "mode": "algorithm"
       },
       {
@@ -412,6 +451,7 @@
         "title": "トポロジカルソート",
         "code": "use std::collections::VecDeque;\n\nlet mut q = VecDeque::new();\nfor v in 0..n {\n    if indeg[v] == 0 {\n        q.push_back(v);\n    }\n}\nlet mut order = Vec::new();\nwhile let Some(v) = q.pop_front() {\n    order.push(v);\n    for &nv in &graph[v] {\n        indeg[nv] -= 1;\n        if indeg[nv] == 0 {\n            q.push_back(nv);\n        }\n    }\n}",
         "difficulty": "level_3",
+        "tags": ["graph", "topological_sort"],
         "mode": "algorithm"
       },
       {
@@ -419,6 +459,7 @@
         "title": "ワーシャルフロイド法",
         "code": "for k in 0..n {\n    for i in 0..n {\n        for j in 0..n {\n            dist[i][j] = dist[i][j].min(dist[i][k] + dist[k][j]);\n        }\n    }\n}",
         "difficulty": "level_3",
+        "tags": ["graph", "warshall_floyd"],
         "mode": "algorithm"
       },
       {
@@ -426,6 +467,7 @@
         "title": "Union-Find",
         "code": "fn find(x: usize, parent: &mut [i32]) -> usize {\n    if parent[x] < 0 {\n        return x;\n    }\n    let root = find(parent[x] as usize, parent);\n    parent[x] = root as i32;\n    root\n}\n\nfn unite(x: usize, y: usize, parent: &mut [i32]) -> bool {\n    let mut x = find(x, parent);\n    let mut y = find(y, parent);\n    if x == y {\n        return false;\n    }\n    if parent[x] > parent[y] {\n        std::mem::swap(&mut x, &mut y);\n    }\n    parent[x] += parent[y];\n    parent[y] = x as i32;\n    true\n}",
         "difficulty": "level_3",
+        "tags": ["data_structure", "union_find"],
         "mode": "algorithm"
       },
       {
@@ -433,6 +475,15 @@
         "title": "セグメント木の更新",
         "code": "fn update(mut i: usize, x: i64, seg: &mut [i64], size: usize) {\n    i += size;\n    seg[i] = x;\n    while i > 1 {\n        i >>= 1;\n        seg[i] = seg[i << 1] + seg[i << 1 | 1];\n    }\n}",
         "difficulty": "level_3",
+        "tags": ["data_structure", "segment_tree"],
+        "mode": "algorithm"
+      },
+      {
+        "id": "rust-algo-sparse-table",
+        "title": "スパーステーブル",
+        "code": "for i in 0..n {\n    st[0][i] = a[i];\n}\nfor k in 1..log {\n    for i in 0..=n - (1 << k) {\n        st[k][i] = st[k - 1][i].min(st[k - 1][i + (1 << (k - 1))]);\n    }\n}",
+        "difficulty": "level_3",
+        "tags": ["data_structure", "sparse_table"],
         "mode": "algorithm"
       }
     ]
